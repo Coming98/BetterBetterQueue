@@ -1,83 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <FrameLayout
-        android:id="@+id/titleLayout"
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/teal_700"
-        >
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/titleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/teal_700"
+            >
+
+            <Button
+                android:id="@+id/navBtn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="15dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/ic_clear_day" />
+
+            <TextView
+                android:id="@+id/placeName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
+                android:layout_marginEnd="45dp"
+                android:layout_gravity="center"
+                android:singleLine="true"
+                android:ellipsize="middle"
+                android:textColor="#673AB7"
+                android:textSize="22sp"
+                android:text="全部类别全部全部类别"
+                />
+        </FrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_todoitem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
 
         <Button
-            android:id="@+id/navBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="15dp"
-            android:layout_gravity="center_vertical"
-            android:background="@drawable/ic_clear_day" />
-
-        <TextView
-            android:id="@+id/placeName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginEnd="45dp"
-            android:layout_gravity="center"
-            android:singleLine="true"
-            android:ellipsize="middle"
-            android:textColor="#673AB7"
-            android:textSize="22sp"
-            android:text="全部类别全部全部类别"
-            />
-    </FrameLayout>
+            android:id="@+id/btn_insert_tc"
+            android:text="Insert TodoCategory"
+            android:textAllCaps="false"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_delete_tc"
+            android:text="Delete TodoCategory"
+            android:textAllCaps="false"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_update_tc"
+            android:text="Update TodoCategory"
+            android:textAllCaps="false"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_getall_tc"
+            android:text="Get All TodoCategory"
+            android:textAllCaps="false"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_get_tc_by_id"
+            android:text="Get Target TodoCategory(id)"
+            android:textAllCaps="false"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_get_tc_by_category"
+            android:text="Get Target TodoCategory(name)"
+            android:textAllCaps="false"/>
+    </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_todoitem"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add_todoitem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/ic_clear_day"
+        android:elevation="8dp"/>
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_insert_tc"
-        android:text="Insert TodoCategory"
-        android:textAllCaps="false"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_delete_tc"
-        android:text="Delete TodoCategory"
-        android:textAllCaps="false"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_update_tc"
-        android:text="Update TodoCategory"
-        android:textAllCaps="false"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_getall_tc"
-        android:text="Get All TodoCategory"
-        android:textAllCaps="false"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_get_tc_by_id"
-        android:text="Get Target TodoCategory(id)"
-        android:textAllCaps="false"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_get_tc_by_category"
-        android:text="Get Target TodoCategory(name)"
-        android:textAllCaps="false"/>
 
     
 
-</LinearLayout>
+</RelativeLayout>
