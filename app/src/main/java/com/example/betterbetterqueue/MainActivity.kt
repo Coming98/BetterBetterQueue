@@ -6,19 +6,31 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.betterbetterqueue.logic.Entity.TodoCategory
 import com.example.betterbetterqueue.ui.MainViewModel
+import com.example.betterbetterqueue.ui.TodoItem.TodoItemAdapter
 import java.util.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     val viewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
+    val recycler: RecyclerView by lazy { findViewById(R.id.recycler_todoitem) }
+    lateinit var adapter: TodoItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val layoutManager = GridLayoutManager(this, 2)
+        adapter = TodoItemAdapter(viewModel.todoCategoryList)
+        recycler.layoutManager = layoutManager
+        recycler.adapter = adapter
 
         val button_insert_tc: Button = findViewById(R.id.btn_insert_tc)
         val button_getall_tc: Button = findViewById(R.id.btn_getall_tc)
@@ -43,6 +55,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             val todocategories = result.getOrNull()
             if(todocategories != null) {
                 todocategories.forEach { todocategory -> Log.d("TEMP", "(${todocategory.id}, ${todocategory.category}, ${todocategory.createTime}, ${todocategory.count})")}
+                viewModel.todoCategoryList.clear()
+                viewModel.todoCategoryList.addAll(todocategories)
+                adapter.notifyDataSetChanged()
             }
         })
 

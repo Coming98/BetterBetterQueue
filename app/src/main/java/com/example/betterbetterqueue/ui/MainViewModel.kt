@@ -18,6 +18,8 @@ class MainViewModel: ViewModel() {
     private val getTodoCategoryByIdObs = MutableLiveData<Long>()
     private val getTodoCategoryByCategoryObs = MutableLiveData<String>()
 
+    val todoCategoryList = ArrayList<TodoCategory>() // 对界面上展示的 TodoCategory 进行缓存
+
     val insertTodoCategoryResult = Transformations.switchMap(insertTodoCategoryObs) { todoCategory ->
         Repository.insertTodoCategory(todoCategory)
     }

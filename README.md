@@ -14,16 +14,26 @@ BBQ, BetterBetterQuere. An open-source cultivation software for managing daily a
 
 存放业务逻辑相关的代码
 
-- dao: 数据访问对象
-- model: 对象模型
-- network: 网络相关
+- Entity: 数据模型
+- dao: 数据访问接口
+- model: 网络对象模型
+- network: 网络数据访问接口
+- Repository: UI 与 Logic 的中间层，总控数据访问接口
 
 ## ui
 
+- [x] 主界面标题栏: 显示当前类别 + 打开侧拉菜单
+- [x] 主界面内容展示：使用 RecyclerView + MaterialCardView 实现卡片式 TodoItem 布局
+- 悬浮按钮：添加新的 TodoItem（可以选择或新建类别）
+- 滑动菜单：选择类别
+- TodoItem 详细内容展示
+- [ ] TodoItem 界面标题栏：显示当前 TodoItem.name + 返回主界面
+
 存放界面展示相关的代码
 
-- place: 
-- weather:
+- TodoItem: 
+- TodoItemInfo:
+- TodoCategory
 
 
 
