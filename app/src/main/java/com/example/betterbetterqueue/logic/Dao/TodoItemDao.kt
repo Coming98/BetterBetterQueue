@@ -9,7 +9,7 @@ interface TodoItemDao {
     // **TodoItem**
     // - 插入一个 Item
     @Insert
-    suspend fun insertTodoItem(todoItem: TodoItem)
+    suspend fun insertTodoItem(todoItem: TodoItem): Long
 
     // - 删除一个 Item
     @Delete
@@ -23,6 +23,15 @@ interface TodoItemDao {
     @Query("select * from todo_item where id=:id")
     suspend fun getTodoItemById(id: Long): TodoItem
 
+    // - 获取所有的 TodoItem
+    @Query("select * from todo_item")
+    suspend fun getAllTodoItem(): List<TodoItem>
+
+
+    // - 根据 CategoryId 查找所有 Item
+    @Query("select * from todo_item where id in (select item_id from todo_category_info where category_id=:categoryId)")
+    suspend fun getTodoItemsByCategoryId(categoryId: Long): List<TodoItem>
+
     // **TodoItemInfo**
     // - 插入一条 ItemInfo
     @Insert
@@ -35,4 +44,5 @@ interface TodoItemDao {
     // - 根据 itemId 查找所有的 ItemInfo
     @Query("select * from todo_item_info where item_id=:itemId")
     suspend fun getTodoItemInfosByItemId(itemId: Long): List<TodoItemInfo>
+
 }

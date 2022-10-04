@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/toolbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:background="#EDEDED"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:orientation="horizontal">
+
+                <android.widget.Button
+                    android:id="@+id/toolbar_left"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:backgroundTint="@color/black"
+                    android:background="@drawable/ic_category"
+                    android:scaleType="fitCenter"
+                    />
+
+
+                <TextView
+                    android:id="@+id/toolbar_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:ellipsize="middle"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:text="全部类别全部全部类别"
+                    />
+
+                <android.widget.Button
+                    android:id="@+id/toolbar_right"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:backgroundTint="@color/black"
+                    android:background="@drawable/ic_category" />
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#7EC5C5C5"/>
+
+
+
+</LinearLayout>

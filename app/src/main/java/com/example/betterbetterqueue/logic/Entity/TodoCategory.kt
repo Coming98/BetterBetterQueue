@@ -4,6 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity(
@@ -13,6 +14,6 @@ import java.util.*
 data class TodoCategory(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val category: String,
-    @ColumnInfo(name = "create_time") val createTime: Date?,
+    @ColumnInfo(name = "create_time") val createTime: LocalDateTime?,
     val count: Int
 )
