@@ -11,12 +11,21 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneOffset
-
+// Done
 class TodoItemInfoByDayViewModel: ViewModel() {
 
+    /**
+     * 左右滑动事件的监听
+     */
     var downX: Float = 0.0F
     var downY: Float = 0.0F
 
+    /**
+     * 界面上显示的信息
+     *      currentLocalDate: 时间跨度所在日期，用于标题栏
+     *      时间跨度的上下限
+     *      时间跨度内 itemInfo 的总时间
+     */
     var currentLocalDate: String = LocalDateTime.now().dateFormatter()
     var minLocalDateLong: Long = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0)).toInstant(ZoneOffset.of("+8")).toEpochMilli()
     var maxLocalDateLong: Long = minLocalDateLong + (3600 * 24 - 1) * 1000

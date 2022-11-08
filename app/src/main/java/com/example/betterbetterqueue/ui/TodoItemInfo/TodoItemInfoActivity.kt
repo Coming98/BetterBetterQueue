@@ -22,6 +22,7 @@ import com.example.betterbetterqueue.ui.ToolbarFragment
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
+// Done
 class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
 
     /**
@@ -439,6 +440,34 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
         btnStoreItemInfo.isEnabled = false
     }
 
+    /**
+     * 根据给定时间（以秒为单位）更新计时器 UI
+     */
+    private fun setItemInfoRunTime(totalRunSeconds: Int) {
+        val second = totalRunSeconds % 60
+        val totalRunMinute = totalRunSeconds / 60
+        val minute = totalRunMinute % 60
+        val hour = totalRunMinute / 60
+
+        todoItemRunHour.text = String.format("%02d", hour)
+        todoItemRunMinute.text = String.format("%02d", minute)
+        todoItemRunSecond.text = String.format("%02d", second)
+    }
+
+    /**
+     * 操作 Button 是否可见 是否可点击
+     *      Todo 可以为 Button 类添加该函数
+     */
+    fun toggleButton(button: Button, visible: Boolean, clickable: Boolean) {
+        button.visibility = if (visible) View.VISIBLE else View.INVISIBLE
+        button.isEnabled = clickable
+        button.backgroundTintList = if(clickable) null else  ColorStateList.valueOf(
+            resources.getColor(
+                R.color.text_in_gray,
+                theme
+            )
+        )
+    }
 
     /**
      * 根据 Id 获取 TodoItem 对象的回调
@@ -522,7 +551,6 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
     }
 
 
-
     /**
      * 加载 TodoItemInfos 后的回调
      *      更新 adapter
@@ -557,94 +585,6 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
-
-    /**
-     * 根据给定时间（以秒为单位）更新计时器 UI
-     */
-    private fun setItemInfoRunTime(totalRunSeconds: Int) {
-        val second = totalRunSeconds % 60
-        val totalRunMinute = totalRunSeconds / 60
-        val minute = totalRunMinute % 60
-        val hour = totalRunMinute / 60
-
-        todoItemRunHour.text = String.format("%02d", hour)
-        todoItemRunMinute.text = String.format("%02d", minute)
-        todoItemRunSecond.text = String.format("%02d", second)
-    }
-
-    /**
-     * 操作 Button 是否可见 是否可点击
-     */
-    fun toggleButton(button: Button, visible: Boolean, clickable: Boolean) {
-        button.visibility = if (visible) View.VISIBLE else View.INVISIBLE
-        button.isEnabled = clickable
-        button.backgroundTintList = if(clickable) null else  ColorStateList.valueOf(
-            resources.getColor(
-                R.color.text_in_gray,
-                theme
-            )
-        )
-    }
-
-    /**
-     * 根据 Ticker 状态的变化缓存信息（已经新建了一个 TodoItemInfo 了才会覆盖）
-     *      缓存 todoItemId
-     *      缓存 tickerInfos
-     */
-    private fun observeTickerStatusObs() {
-        viewModel.tickerStatusObs.observe(this) { status ->
-            if(status == null) return@observe
-
-            val temp = TickerInfos(
-                viewModel.tickerStatus,
-                viewModel.tickerBaseTime,
-                viewModel.tickerRecentTime?.toLong() ?: -1L,
-                viewModel.tickerBeginTime?.toLong() ?: -1L
-            )
-            Log.d("TEMP", temp.toString())
-            viewModel.dumpTodoItemIdCache(viewModel.todoItemId)
-            viewModel.dumpTickerInfosCache(
-                TickerInfos(
-                    viewModel.tickerStatus,
-                    viewModel.tickerBaseTime,
-                    viewModel.tickerRecentTime?.toLong() ?: -1L,
-                    viewModel.tickerBeginTime?.toLong() ?: -1L
-                )
-            )
-        }
-    }
-
-
-    /**
-     * 更新置顶状态后的回调
-     *      记录置顶时间
-     *      更新 Toolbar 的 UI
-     *      恢复 Toolbar 右侧按钮的点击功能 （防止连续点击造成更新混乱）
-     */
-    private fun observeUpdateTodoItemToptimeByIdResult() {
-        viewModel.updateTodoItemToptimeByIdResult.observe(this, Observer { result ->
-            val newTopTime = result.getOrNull()
-            if(newTopTime != null) {
-                viewModel.topTime = newTopTime
-                refreshToolbarRightByTopTime(newTopTime)
-            }
-            toolbarFragment.toolbarRight.isClickable = true
-        })
-    }
-
-    /**
-     * 更新 TodoItemName 后的回调
-     *      刷新 Toolbar
-     */
-    private fun observeUpdateTodoItemNameByIdResult() {
-        viewModel.updateTodoItemNameByIdResult.observe(this, Observer { result ->
-            val newTodoItemName = result.getOrNull()
-            if(newTodoItemName != null) {
-                toolbarFragment.refreshToolbarName(newTodoItemName, false)
-            }
-        })
-    }
-
     /**
      * 插入或更新 TodoItemInfo 后的回调
      *      重新加载 TodoItemInfo
@@ -672,6 +612,63 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
                 } else {
                     viewModel.currentTodoItemInfoId = -1L
                 }
+            }
+        })
+    }
+
+    /**
+     * 根据 Ticker 状态的变化缓存信息（已经新建了一个 TodoItemInfo 了才会覆盖）
+     *      缓存 todoItemId
+     *      缓存 tickerInfos
+     */
+    private fun observeTickerStatusObs() {
+        viewModel.tickerStatusObs.observe(this) { status ->
+            if(status == null) return@observe // 过滤初始化 ViewModel 导致的事件
+
+            val temp = TickerInfos(
+                viewModel.tickerStatus,
+                viewModel.tickerBaseTime,
+                viewModel.tickerRecentTime?.toLong() ?: -1L,
+                viewModel.tickerBeginTime?.toLong() ?: -1L
+            )
+            viewModel.dumpTodoItemIdCache(viewModel.todoItemId)
+            viewModel.dumpTickerInfosCache(
+                TickerInfos(
+                    viewModel.tickerStatus,
+                    viewModel.tickerBaseTime,
+                    viewModel.tickerRecentTime?.toLong() ?: -1L,
+                    viewModel.tickerBeginTime?.toLong() ?: -1L
+                )
+            )
+        }
+    }
+
+    /**
+     * 更新置顶状态后的回调
+     *      记录置顶时间
+     *      更新 Toolbar 的 UI
+     *      恢复 Toolbar 右侧按钮的点击功能 （防止连续点击造成更新混乱）
+     */
+    private fun observeUpdateTodoItemToptimeByIdResult() {
+        viewModel.updateTodoItemToptimeByIdResult.observe(this, Observer { result ->
+            val newTopTime = result.getOrNull()
+            if(newTopTime != null) {
+                viewModel.topTime = newTopTime
+                refreshToolbarRightByTopTime(newTopTime)
+            }
+            toolbarFragment.toolbarRight.isClickable = true
+        })
+    }
+
+    /**
+     * 更新 TodoItemName 后的回调
+     *      刷新 Toolbar
+     */
+    private fun observeUpdateTodoItemNameByIdResult() {
+        viewModel.updateTodoItemNameByIdResult.observe(this, Observer { result ->
+            val newTodoItemName = result.getOrNull()
+            if(newTodoItemName != null) {
+                toolbarFragment.refreshToolbarName(newTodoItemName, false)
             }
         })
     }

@@ -21,25 +21,37 @@ import com.example.betterbetterqueue.ui.ToolbarFragment
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-
+// Done
 class TodoItemInfoByDayActivity : AppCompatActivity() {
 
+    /**
+     * 外部启动接口
+     */
     companion object {
         fun onActionStart(context: Context) {
             val intent = Intent(context, TodoItemInfoByDayActivity::class.java)
             context.startActivity(intent)
         }
     }
-    // viewModel
+
     val viewModel by lazy { ViewModelProvider(this).get(TodoItemInfoByDayViewModel::class.java) }
-    // 标题栏 fragment
+
     lateinit var toolbarFragment: ToolbarFragment
-    // 进度条
-    val dayInfoProgressBar: ProgressBar by lazy { findViewById(R.id.todoitem_info_by_day_progress) }
-    val dayInfoProgressBarDes: TextView by lazy { findViewById(R.id.todoitem_info_by_day_progress_text) }
-    // recycler
+
+    /**
+     * 主体组件：RecyclerView
+     */
     val dayInfoRecyler: RecyclerView by lazy { findViewById(R.id.todoitem_info_by_day_recycler) }
     lateinit var dayInfoAdapter: TodoItemInfoByDayAdapter
+
+    /**
+     * 底部组件
+     *      进度条：根据 TodoApplication 中配置的工作时间，展示今天的进度信息
+     *      进度条描述信息
+     */
+    val dayInfoProgressBar: ProgressBar by lazy { findViewById(R.id.todoitem_info_by_day_progress) }
+    val dayInfoProgressBarDes: TextView by lazy { findViewById(R.id.todoitem_info_by_day_progress_text) }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,21 +72,35 @@ class TodoItemInfoByDayActivity : AppCompatActivity() {
 
         /**
          * 根据时间跨度刷新 TodoItemInfoList
+         *      目前时间跨度仅支持一天
          */
         observeGetTodoItemInfoByTimeScopeResult()
 
+        /**
+         * 根据时间跨度获取 TodoItemInfo
+         */
         viewModel.getTodoItemInfoByTimeScope(viewModel.minLocalDateLong, viewModel.maxLocalDateLong)
     }
 
+    /**
+     * 加载 todoItemInfoList 后的更新
+     *      更新 adapter
+     *      根据时间跨度刷新标题名称
+     *      进度条 UI 更新：
+     *          totalSecond: 描述进度条信息
+     *
+     */
     private fun observeGetTodoItemInfoByTimeScopeResult() {
         viewModel.getTodoItemInfoByTimeScopeResult().observe(this, Observer { result ->
             val todoItemInfoList = result.getOrNull()
             if (todoItemInfoList != null) {
-                viewModel.totalSecond = todoItemInfoList.sumOf { it.totalTime }.toInt()
                 viewModel.todoItemInfoList.clear()
                 viewModel.todoItemInfoList.addAll(todoItemInfoList)
                 dayInfoAdapter.notifyDataSetChanged()
+
                 toolbarFragment.refreshToolbarName(viewModel.currentLocalDate, true)
+
+                viewModel.totalSecond = todoItemInfoList.sumOf { it.totalTime }.toInt()
                 val progressValue = ((viewModel.totalSecond.toFloat() / WORKDAY_IN_SECOND) * 100).toInt()
                 if(progressValue <= 15) {
                     dayInfoProgressBar.progress = 0
@@ -87,7 +113,6 @@ class TodoItemInfoByDayActivity : AppCompatActivity() {
         })
     }
 
-    @SuppressLint("RestrictedApi")
     private fun loadHeaderBar() {
         toolbarFragment = loadToolbarFragment(
             toolbarNmae= viewModel.currentLocalDate,
@@ -97,6 +122,10 @@ class TodoItemInfoByDayActivity : AppCompatActivity() {
             handleButtonLeft = {
                finish()
             },
+            /**
+             * 将时间跨度重置到今日
+             *      Todo 未来可以考虑缓存查询到的时间跨度或者更方便的切换时间跨度
+             */
             handleButtonRight = {
                 if(viewModel.currentLocalDate != LocalDateTime.now().dateFormatter()) {
                     viewModel.currentLocalDate = LocalDateTime.now().dateFormatter()

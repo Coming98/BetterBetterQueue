@@ -7,7 +7,7 @@ import com.example.betterbetterqueue.logic.Entity.TickerInfos
 import com.example.betterbetterqueue.logic.Entity.TodoItemInfo
 import com.example.betterbetterqueue.logic.Repository
 import java.time.LocalDateTime
-
+// Done
 class TodoItemInfoViewModel: ViewModel() {
 
     /**

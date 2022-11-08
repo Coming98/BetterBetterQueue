@@ -13,7 +13,7 @@ import com.example.betterbetterqueue.dateFormatter
 import com.example.betterbetterqueue.logic.Entity.TodoItemInfo
 import com.example.betterbetterqueue.timeFormatter
 
-
+// Done 同 TodoItemInfoAdapter
 class TodoItemInfoByDayAdapter(val todoItemInfoList: List<TodoItemInfo>): RecyclerView.Adapter<TodoItemInfoByDayAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
