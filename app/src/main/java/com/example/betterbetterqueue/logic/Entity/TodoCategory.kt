@@ -9,11 +9,11 @@ import java.util.*
 
 @Entity(
     tableName = "todo_category",
-    indices = [Index(value = ["category"], unique = true)]
+    indices = [Index(value = ["name"], unique = true)]
 ) // 对 category 列创建索引, 防止类名重复
 data class TodoCategory(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val category: String,
+    @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "create_time") val createTime: LocalDateTime?,
-    val count: Int
+    @ColumnInfo(name = "count") val count: Int
 )

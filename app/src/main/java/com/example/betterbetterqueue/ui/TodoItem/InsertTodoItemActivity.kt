@@ -35,9 +35,11 @@ class InsertTodoItemActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_insert_todoitem)
 
         //////////////////////////// 加载标题栏
-        loadToolbarFragment(toolbarNmae = "Insert TodoItem", toolbarLeft = R.drawable.ic_back, toolbarRight = null, handleButtonLeft = {
-            finish()
-        }, handleButtonRight = {})
+        loadToolbarFragment(toolbarNmae = getString(R.string.insertTodoItemToolbarName), toolbarLeft = R.drawable.ic_back, toolbarRight = null,
+            changeToolbarName = null,
+            handleButtonLeft = { finish()},
+            handleButtonRight = { }
+        )
 
 
         /////////////////////////////// 加载数据库数据并监听
@@ -77,7 +79,7 @@ class InsertTodoItemActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 // 查询类别信息
                 var todoItemCategoryId: String = "null"
-                val todoCategoryItems = viewModel.todoCategoryList.map { it.category }
+                val todoCategoryItems = viewModel.todoCategoryList.map { it.name }
                 if(todoCategoryItems.contains(todoItemCategory)) {
                     todoItemCategoryId = viewModel.todoCategoryList.get(todoCategoryItems.indexOf(todoItemCategory)).id.toString()
                 }
@@ -94,7 +96,7 @@ class InsertTodoItemActivity : AppCompatActivity(), View.OnClickListener {
             // 选择类别
 
             R.id.btn_check_category -> {
-                val todoCategoryItems = viewModel.todoCategoryList.map { it.category }.toTypedArray()
+                val todoCategoryItems = viewModel.todoCategoryList.map { it.name }.toTypedArray()
                 val alertBuilder: AlertDialog.Builder = AlertDialog.Builder(this).apply {
                     setTitle("时间规划集")
                     .setItems(todoCategoryItems, DialogInterface.OnClickListener { dialog, which ->

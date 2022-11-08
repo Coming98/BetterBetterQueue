@@ -2,13 +2,76 @@
 
 BBQ, BetterBetterQuere. An open-source cultivation software for managing daily affairs and recording growth.
 
-# Functional Requirement & Tools
+# Limitation
 
-- Add TodoItem
-  - Props: name, beginTime, 
+- The interface is not distributed in proportion, so it may be ugly on other mobiles (Best support: Realme X3366)
+
+# Dependence
+
+- minSdk - targetSdk: 26 - 32
+- [more details](app/build.gradle.template)
+
+# Features
+
+- Classification of TodoItem
+- Statistical Analysis of TodoItem
+- Export and Import TodoItem Database by json format
+- TodoItem review in days
+
+# Use-cases
+
+## MainActivity
+
+- [source code](app/src/main/java/com/example/betterbetterqueue/MainActivity.kt)
+- []
+
+这是主界面
+
+![](https://raw.githubusercontent.com/Coming98/pictures/main/202210281046766.png)
+
+Features：
+- [x] 根据当前选中的类别展示已添加的 TodoItem
+- [x] 每个 TodoItem 显示信息为: 名称, 创建时间, 投入时间
+- [x] 顶部左侧按钮用于弹出左侧的[滑动菜单](#todocategory-drawer-layout), 提供类别选择
+- [x] 顶部中间的标题支持单击后更改名称
+- [x] 顶部右侧按钮用于弹出[菜单](#config-menu)提供以下功能选择:
+  - [x] [星迹 - TodoItemInfoByDayActivity](#todoiteminfobydayactivity): 以天为单位查看今天所进行的 Todo 信息
+  - [ ] Export Database Data: 导出 JSON 格式的数据库数据 - TODO, 显示导出的位置
+  - [x] Import Database Data: 导入 JSON 格式的数据库数据 - 暂时只支持从微信中选择数据库文件后以本应用打开进行导入
+- [x] 底部的悬浮按钮用于[创建新的 TodoItem](#inserttodoitemactivity)
+- [x] 内容区域支持下拉刷新
+- [x] 内容区域支持右滑弹出[类别选择界面](#todocategory-drawer-layout)
+- [x] 内容区域支持左滑进入[星迹](#todoiteminfobydayactivity)
+
+### TodoCategory Drawer Layout
+
+![](https://raw.githubusercontent.com/Coming98/pictures/main/202210281057381.png)
+
+Features:
+- [x] 展示所有的类别信息
+- [x] 第一个类别信息是固定名称 `星海`, 表示所有的 TodoItem 集合, 即每一个创建的 TodoItem 默认属于该类别
+- [x] 后续的类别为用户手动创建的类别集合
+- [x] 单击目标类别按钮即可切换类别
+
+### Config Menu
+
+![](https://raw.githubusercontent.com/Coming98/pictures/main/202210281101279.png)
+
+- [x] [TodoItemInfoByDayActivity](#todoiteminfobydayactivity): 以天为单位查看今天所进行的 Todo 信息
+- [x] Export Database Data: 导出 JSON 格式的数据库数据 - TODO, 显示导出的位置
+- [x] Import Database Data: 导入 JSON 格式的数据库数据 - 暂时只支持从微信中选择数据库文件后以本应用打开进行导入
 
 
-# Description
+
+## InsertTodoItemActivity
+
+## TodoItemInfoByDayActivity
+
+![](https://raw.githubusercontent.com/Coming98/pictures/main/202210282040989.png)
+
+- 支持左右滑动切换日期
+- 支持左滑时日期上界检测
+
 
 ## logic
 
@@ -20,263 +83,7 @@ BBQ, BetterBetterQuere. An open-source cultivation software for managing daily a
 - network: 网络数据访问接口
 - Repository: UI 与 Logic 的中间层，总控数据访问接口
 
-- [x] 完善 TodoItem 的数据库操作: 添加 + 查询所有 TodoItem
+# Additional Documentation
 
-## ui
-
-- [x] 主界面标题栏: 显示当前类别 + 打开侧拉菜单
-- [x] 主界面内容展示：使用 RecyclerView + MaterialCardView 实现卡片式 TodoItem 布局
-- [x] 悬浮按钮：添加新的 TodoItem
-- [x] 悬浮按钮：交互式添加 TodoItem
-- [ ] 完善 TodoItem 的相关 UI
-- [ ] 悬浮按钮：可以选择或指定新类别
-- 滑动菜单：选择类别
-- TodoItem 详细内容展示
-- [ ] TodoItem 界面标题栏：显示当前 TodoItem.name + 返回主界面
-
-存放界面展示相关的代码
-
-- TodoItem: 
-- TodoItemInfo:
-- TodoCategory
-
-
-
-# Database
-
-## Entity
-
-root_dir = logic/dao/
-
-### TodoCategory
-
-TodoCategory 表, 存放着 TodoItem 的类别信息
-- columns: id, category, createTime, count(类别对应的 TodoItem 的个数 [TODO 应该可以优化])
-
-```kotlin
-@Entity(
-    tableName = "todo_category",
-    // 对 category 列创建索引, 防止类名重复
-    indices = [Index(value = ["category"], unique = true)] 
-) 
-data class TodoCategory(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    @ColumnInfo(index = true) val category: String,
-    @ColumnInfo(name = "create_time") val createTime: Date,
-    val count: Int
-)
-```
-
-### TodoCategoryInfo
-
-TodoCategoryInfo 表, 存放着 Category 与 Item 的映射关系
-- columns: id, category_id, item_id
-- 设置好外键, 以应用级联操作
-
-```kotlin
-@Entity(
-    tableName = "TodoCategoryInfo",
-    foreignKeys = arrayOf(
-        ForeignKey(
-            entity = TodoCategory::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("category_id"),
-            onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = TodoItem::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("item_id"),
-            onDelete = ForeignKey.CASCADE
-        ),
-    )
-)
-data class TodoCategoryInfo(
-    @PrimaryKey(autoGenerate = true) val id: Long,
-    @ColumnInfo(name = "category_id", index = true) val categoryId: Long,
-    @ColumnInfo(name = "item_id") val itemId:Long
-)
-```
-
-### TodoItem
-
-TodoItem 表, 存放着 TodoItem 的基本信息
-- columns: id, name, createTime, totalTime(单位为 s, [TODO 可能通过数据库相关技术进行优化维护])
-
-```kotlin
-@Entity(tableName = "TodoItem")
-data class TodoItem(
-    @PrimaryKey(autoGenerate = true) val id: Long,
-    @ColumnInfo(name = "name") val name: String,
-    @ColumnInfo(name = "create_time") val createTime: Date,
-    @ColumnInfo(name = "total_time") val totalTime: Long,
-)
-```
-
-### TodoItemInfo
-
-TodoItemInfo 表, 存放着 TodoItem 的详细记录信息
-- columns: id, item_id, description, begin_time, end_time, total_time(单位 s)
-
-```kotlin
-@Entity(
-    tableName = "TodoItemInfo",
-    foreignKeys = arrayOf(
-        ForeignKey(
-            entity = TodoItem::class,
-            parentColumns = arrayOf("id"),
-            childColumns = arrayOf("item_id"),
-            onDelete = ForeignKey.CASCADE
-        ),
-    )
-)
-data class TodoItemInfo(
-    @PrimaryKey(autoGenerate = true) val id: Long,
-    @ColumnInfo(name = "item_id", index = true) val itemId: Long,
-    @ColumnInfo(name = "description") val description: String,
-    @ColumnInfo(name = "begin_time") val beginTime: Date,
-    @ColumnInfo(name = "end_time") val endTime: Date,
-    @ColumnInfo(name = "total_time") val TotalTime: Long
-)
-```
-
-## Dao
-
-### TodoCategoryDao
-
-对 TodoCategory 相关的操作提供接口
-
-**TodoCategory**
-- 插入类别信息：新建一个 category
-
-```kotlin
-@Insert
-suspend fun insertCategory(todoCategory: TodoCategory)
-```
-
-- 删除类别：删除一个 category
-
-```kotlin
-@Delete
-suspend fun deleteCategory(todoCategory: TodoCategory)
-```
-
-- 更改类别名称：更改某个 category 的 name 属性
-
-```kotlin
-@Query("update todo_category set category=:category where id=:id")
-suspend fun updateCategoryById(category: String, id: Long)
-```
-
-- 获取所有类别信息：获取所有 category 
-
-```kotlin
-@Query("select * from todo_category")
-suspend fun getAll(): List<TodoCategory>
-```
-
-- 根据 id 获取类别信息：根据 category_id 获取 category 信息
-
-```kotlin
-@Query("select * from todo_category where id = :id")
-suspend fun getTodoCategoryById(id: Long): TodoCategory
-```
-
-- 根据类别信息获取 id: 根据 category 获取 category_id; 更改 item 对应的 category 时, 需要根据 category 找到 category_id, 让后更新 TodoCategoryInfo
-
-```kotlin
-@Query("select * from todo_category where category=:category")
-suspend fun getTodoCategoryByCategory(category: String): TodoCategory
-```
-
-
-
-TodoCategoryInfo
-- 插入类别条目：插入 todoitem 时，插入 todoitem 与其 category 的映射
-
-```kotlin
-@Insert
-suspend fun insertCategoryInfo(todoCategoryInfo: TodoCategoryInfo)
-```
-
-- 删除类别条目：级联操作自动处理
-
-```kotlin
-@Delete
-suspend fun deleteCategoryInfo(todoCategoryInfo: TodoCategoryInfo)
-```
-
-- 更改类别条目：更改 todoitem 的 category
-
-```kotlin
-@Update
-suspend fun updateCategoryInfo(todoCategoryInfo: TodoCategoryInfo)
-```
-
-- 获取某一类别下的所有条目：根据 category_id 获取所有的 todoitem
-
-```kotlin
-@Query("select * from todo_category_info where category_id=:categoryId")
-suspend fun getItemIdsByCategoryId(categoryId: Long): List<TodoCategoryInfo>
-```
-
-- 获取某一条目的类别：根据 item_id 获取 category_id
-
-```kotlin
-@Query("select * from todo_category_info where item_id=:itemId")
-suspend fun getCategoryIdByItemId(itemId: Long): TodoCategoryInfo
-```
-
-### TodoItemDao
-
-**TodoItem**
-- 插入一个 Item
-
-```kotlin
-@Insert
-suspend fun insertTodoItem(todoItem: TodoItem)
-```
-
-- 删除一个 Item
-
-```kotlin
-@Delete
-suspend fun deleteTodoItem(todoItem: TodoItem)
-```
-
-- 更新 item 的名称
-
-```kotlin
-@Query("update todo_item set name=:name where id=:id")
-suspend fun updateTodoItemNameById(name: String, id:Long)
-```
-
-- 根据 id 查找一个 item
-
-```kotlin
-@Query("select * from todo_item where id=:id")
-    suspend fun getTodoItemById(id: Long): TodoItem
-```
-
-
-**TodoItemInfo**
-- 插入一条 ItemInfo
-
-```kotlin
-@Insert
-suspend fun insertTodoItemInfo(todoItemInfo: TodoItemInfo)
-```
-
-- 更新 ItemInfo 的 description
-
-```kotlin
-@Query("update todo_item_info set description=:description where id=:id")
-suspend fun updateTodoItemInfoDesById(description: String, id: Long)
-```
-
-- 根据 itemId 查找所有的 ItemInfo
-
-```kotlin
-@Query("select * from todo_item_info where item_id=:itemId")
-suspend fun getTodoItemInfosByItemId(itemId: Long): List<TodoItemInfo>
-```
+- [Database - Entity](app/src/main/java/com/example/betterbetterqueue/logic/Entity/readme.md)
+- [Database - Dao](app/src/main/java/com/example/betterbetterqueue/logic/Dao/readme.md)

@@ -1,5 +1,6 @@
 package com.example.betterbetterqueue.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -8,83 +9,142 @@ import com.example.betterbetterqueue.logic.Entity.TodoCategory
 import com.example.betterbetterqueue.logic.Entity.TodoCategoryInfo
 import com.example.betterbetterqueue.logic.Entity.TodoItem
 import com.example.betterbetterqueue.logic.Repository
-
+import com.example.betterbetterqueue.ui.Config.DBInJson
+// Done
 class MainViewModel: ViewModel() {
 
-    ////////////////////////////////// TodoItem(MainActivity)
+    /**
+     * 滑动事件检测
+     * 通过 down + up 得到滑动方向
+     * 记录 down 的坐标 (x, y)
+     */
+    var downX: Float = 0.0f
+    var downY: Float = 0.0f
+
+    /**
+     * Local state cache
+     * dumpTodoCategoryIdCache: 开启一个线程保存当前类别即可, 不需要回调
+     * ---
+     * loadTodoCategoryIdCache: 成功加载用户的缓存数据后需要回调处理
+     */
+
+    private val loadTodoCategoryIdCacheObs = MutableLiveData<Any?>()
+
+    val loadTodoCategoryIdCacheResult = Transformations.switchMap(loadTodoCategoryIdCacheObs) {
+        Repository.loadCurrentTodoCategoryId()
+    }
+
+    fun loadTodoCategoryIdCache() {
+        loadTodoCategoryIdCacheObs.value = loadTodoCategoryIdCacheObs.value
+    }
+
+    fun dumpTodoCategoryIdCache(todoCategoryId: Long) {
+        Repository.dumpCurrentTodoCategoryId(todoCategoryId)
+    }
+
+    /**
+     * TodoItem 相关的 ViewModel
+     * todoItemList: 界面上展示的 TodoItem 列表
+     * ---
+     * insertTodoItem: 插入新的 TodoItem 后需要回调处理
+     * refreshTodoItemByCategory: 类别更换后需要根据类别刷新 TodoItem 并回调处理
+     * deleteTodoItemById: 删除 TodoItem 后需要回调处理 TODO
+     */
 
     val todoItemList = ArrayList<TodoItem>() // 对界面上展示的 TodoItemList 进行缓存
 
-    data class InsertTodoItemTriple(val todoItem: TodoItem, val todoItemCategory: String, val todoItemCategoryId: Long)
-
-    private val insertTodoItemObs = MutableLiveData<InsertTodoItemTriple>()
-    private val getAllTodoItemObs = MutableLiveData<Any?>()
+    private val insertTodoItemObs = MutableLiveData<Triple<TodoItem, String, Long>>()
     private val refreshTodoItemByCategoryObs = MutableLiveData<Long>()
+    private val deleteTodoItemByIdObs = MutableLiveData<Long>()
 
     val insertTodoItemResult = Transformations.switchMap(insertTodoItemObs) { insertTodoItemTriple ->
-        Repository.insertTodoItem(insertTodoItemTriple.todoItem, insertTodoItemTriple.todoItemCategory, insertTodoItemTriple.todoItemCategoryId)
+        Repository.insertTodoItem(insertTodoItemTriple.first, insertTodoItemTriple.second, insertTodoItemTriple.third)
     }
 
-    val getAllTodoItemResult = Transformations.switchMap(getAllTodoItemObs) {
-        Repository.getAllTodoItem()
-    }
     val refreshTodoItemByCategoryResult = Transformations.switchMap(refreshTodoItemByCategoryObs) { todoCategoryId ->
         Repository.refreshTodoItemByCategory(todoCategoryId)
     }
 
-    fun insertTodoItem(todoItem: TodoItem, todoItemCategory: String, todoItemCategoryId: Long) {
-        insertTodoItemObs.value = InsertTodoItemTriple(todoItem, todoItemCategory, todoItemCategoryId)
+    val deleteTodoItemByIdResult = Transformations.switchMap(deleteTodoItemByIdObs) { todoItemId ->
+        Repository.deleteTodoItemById(todoItemId)
     }
 
-    fun getAllTodoItem() {
-        getAllTodoItemObs.value = getAllTodoCategoryObs.value
+    fun insertTodoItem(todoItem: TodoItem, todoItemCategory: String, todoItemCategoryId: Long) {
+        insertTodoItemObs.value = Triple(todoItem, todoItemCategory, todoItemCategoryId)
     }
 
     fun refreshTodoItemByCategory(todoCategoryId: Long) {
         refreshTodoItemByCategoryObs.value = todoCategoryId
     }
 
-    ////////////////////////////////// TodoCategory(侧边栏)
+    fun deleteTodoItemById(todoItemId: Long) {
+        deleteTodoItemByIdObs.value = todoItemId
+    }
+
+    /**
+     * TodoCategory 相关的 ViewModel
+     * todoCategoryList: 界面上展示的 TodoCategory 列表
+     * todoCategoryId: 当前选中的 TodoCategoryId, -1 表示星海 (所有类别)
+     * ---
+     * getAllTodoCategory: 获取所有 TodoCategory 后需要回调处理
+     * updateTodoCategoryNameById: 更新 TodoCategoryName 后需要回调处理
+     * deleteTodoCategoryById: 删除 TodoCategory 后需要回调处理
+     */
     val todoCategoryList = ArrayList<TodoCategory>() // 对界面上展示的 TodoCategoryList 进行缓存
-    val todoCategoryId = MutableLiveData<Long>(-1)
+    var todoCategoryId: Long = -1
 
     private val getAllTodoCategoryObs = MutableLiveData<Any?>()
+    private val updateTodoCategoryNameByIdObs = MutableLiveData<Pair<String, Long>>()
+    private val deleteTodoCategoryByIdObs = MutableLiveData<Long>()
 
     val getAllTodoCategoryResult = Transformations.switchMap(getAllTodoCategoryObs) {
         Repository.getAllTodoCategory()
+    }
+
+    val updateTodoCategoryNameByIdResult = Transformations.switchMap(updateTodoCategoryNameByIdObs) {
+        Repository.updateTodoCategoryNameById(it.first, it.second)
+    }
+
+    val deleteTodoCategoryByIdResult = Transformations.switchMap(deleteTodoCategoryByIdObs) { todoCategoryId ->
+        Repository.deleteTodoCategoryById(todoCategoryId)
     }
 
     fun getAllTodoCategory() {
         getAllTodoCategoryObs.value = getAllTodoCategoryObs.value
     }
 
-    ////////////////////////////// TodoCategoryInfo
-    private val getAllTodoCategoryInfoObs = MutableLiveData<Any?>()
-    private val insertTodoCategoryInfoObs = MutableLiveData<TodoCategoryInfo>()
-    private val deleteTodoCategoryInfoByIdObs = MutableLiveData<Long>()
-
-    val getAllTodoCategoryInfoResult = Transformations.switchMap(getAllTodoCategoryInfoObs) {
-        Repository.getAllTodoCategoryInfo()
+    fun updateTodoCategoryNameById(newTodoCategoryName: String, todoCategoryId: Long) {
+        updateTodoCategoryNameByIdObs.value = Pair(newTodoCategoryName, todoCategoryId)
     }
 
-    val insertTodoCategoryInfoResult = Transformations.switchMap(insertTodoCategoryInfoObs) { todoCategoryInfo ->
-        Repository.insertTodoCategoryInfo(todoCategoryInfo)
+    fun deleteTodoCategoryById(todoCategoryId: Long) {
+        deleteTodoCategoryByIdObs.value = todoCategoryId
     }
 
-    val deleteTodoCategoryInfoByIdResult = Transformations.switchMap(deleteTodoCategoryInfoByIdObs) { todoCategoryInfoId ->
-        Repository.deleteTodoCategoryInfoById(todoCategoryInfoId)
+    /**
+     * 数据库的导入与导出
+     * ---
+     * getExportedDBData: 加载所有数据库数据后需要回调处理
+     * importDBData: 根据外部 JSON 数据覆盖当前数据库后需要回调处理
+     *
+     */
+    private val getExportedDBDataObs = MutableLiveData<Any?>()
+    private val importDBDataObs = MutableLiveData<DBInJson>()
+
+    val getExportedDBDataResult = Transformations.switchMap(getExportedDBDataObs) {
+        Repository.getExportedDBDataObs()
     }
 
-    fun getAllTodoCategoryInfo() {
-        getAllTodoCategoryInfoObs.value = getAllTodoCategoryInfoObs.value
+    val importDBDataResult = Transformations.switchMap(importDBDataObs) { dbInJson ->
+        Repository.importDBData(dbInJson)
     }
 
-    fun insertTodoCategoryInfo(todoCategoryInfo: TodoCategoryInfo) {
-        insertTodoCategoryInfoObs.value = todoCategoryInfo
+    fun getExportedDBData() {
+        getExportedDBDataObs.value = getExportedDBDataObs.value
     }
 
-    fun deleteTodoCategoryInfoById(todoCategoryInfoId: Long) {
-        deleteTodoCategoryInfoByIdObs.value = todoCategoryInfoId
+    fun importDBData(dbInJson: DBInJson) {
+        importDBDataObs.value = dbInJson
     }
 
 }

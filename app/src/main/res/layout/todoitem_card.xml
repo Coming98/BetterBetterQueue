@@ -8,106 +8,119 @@
     android:padding="4dp"
     >
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="28dp"
-            android:orientation="horizontal"
-            android:layout_marginTop="4dp"
-            android:gravity="center">
+        <View
+            android:id="@+id/view_ic_top"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:visibility="gone"
+            android:background="@drawable/ic_top_128"/>
 
-<!--            <android.widget.Button-->
-<!--                android:layout_width="24dp"-->
-<!--                android:layout_height="24dp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:backgroundTint="@color/black"-->
-<!--                android:background="@drawable/ic_item_header"-->
-<!--                android:layout_marginRight="6dp"-->
-<!--                />-->
-            <TextView
-                android:id="@+id/todoitem_card_name"
-                android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="28dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp"
+                android:gravity="center">
+
+    <!--            <android.widget.Button-->
+    <!--                android:layout_width="24dp"-->
+    <!--                android:layout_height="24dp"-->
+    <!--                android:layout_gravity="center"-->
+    <!--                android:backgroundTint="@color/black"-->
+    <!--                android:background="@drawable/ic_item_header"-->
+    <!--                android:layout_marginRight="6dp"-->
+    <!--                />-->
+                <TextView
+                    android:id="@+id/todoitem_card_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="24dp"
+                    android:text="TESTTEZSTTSTS"
+                    android:maxLines="1"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#03A9F4"
+                    android:textSize="18sp"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp"
+                android:gravity="center">
+
+                <android.widget.Button
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/black"
+                    android:background="@drawable/ic_item_createtime"
+                    android:layout_marginRight="6dp"
+                    />
+
+                <TextView
+                    android:id="@+id/todoitem_card_createtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:maxLines="1"
+                    android:textSize="14sp"
+                    android:text="2017-12-32"
+                    />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="24dp"
-                android:text="TESTTEZSTTSTS"
-                android:maxLines="1"
-                android:gravity="center"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:layout_marginTop="10dp"
-                android:textColor="#03A9F4"
-                android:textSize="18sp"
-                />
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:gravity="center">
+
+                <android.widget.Button
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center_vertical"
+                    android:backgroundTint="@color/black"
+                    android:background="@drawable/ic_item_totaltime"
+                    android:layout_marginRight="4dp"
+                    />
+
+                <TextView
+                    android:id="@+id/todoitem_card_totaltime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textSize="16sp"
+                    android:textColor="#FF9800"
+                    android:text="0.5"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_margin="5dp"
+                    android:textSize="14sp"
+                    android:text="H"
+                    />
+            </LinearLayout>
+
         </LinearLayout>
+    </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:orientation="horizontal"
-            android:layout_marginTop="4dp"
-            android:gravity="center">
-
-            <android.widget.Button
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/black"
-                android:background="@drawable/ic_item_createtime"
-                android:layout_marginRight="6dp"
-                />
-
-            <TextView
-                android:id="@+id/todoitem_card_createtime"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:maxLines="1"
-                android:textSize="14sp"
-                android:text="2017-12-32"
-                />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            android:gravity="center">
-
-            <android.widget.Button
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_gravity="center_vertical"
-                android:backgroundTint="@color/black"
-                android:background="@drawable/ic_item_totaltime"
-                android:layout_marginRight="4dp"
-                />
-
-            <TextView
-                android:id="@+id/todoitem_card_totaltime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:maxLines="1"
-                android:textSize="16sp"
-                android:textColor="#FF9800"
-                android:text="0.5"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_margin="5dp"
-                android:textSize="14sp"
-                android:text="H"
-                />
-        </LinearLayout>
-
-    </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>

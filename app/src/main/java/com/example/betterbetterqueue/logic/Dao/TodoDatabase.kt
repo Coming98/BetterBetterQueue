@@ -18,7 +18,7 @@ import com.example.betterbetterqueue.logic.Entity.TodoItemInfo
         TodoItem::class,
         TodoItemInfo::class
     ),
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

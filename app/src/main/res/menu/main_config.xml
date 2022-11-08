@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_info_by_day"
+        android:icon="@drawable/ic_meteor_64"
+        android:title="星迹" />
+    <item
+        android:id="@+id/menu_export_db"
+        android:icon="@drawable/ic_db_export_64"
+        android:title="导出数据" />
+    <item
+        android:id="@+id/menu_import_db"
+        android:icon="@drawable/ic_db_import_64"
+        android:title="导入数据" />
+</menu>

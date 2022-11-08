@@ -17,6 +17,7 @@
         tools:context=".MainActivity"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:background="@color/main_bg_color"
         >
 
         <LinearLayout
@@ -30,12 +31,22 @@
                 android:id="@+id/toolbar_fragment"
                 />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_todoitem"
-                android:layout_width="match_parent"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/todoitem_swipe"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="4dp"
-                />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                >
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_todoitem"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="4dp"
+
+                    />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -50,6 +61,7 @@
             android:elevation="8dp"
             app:maxImageSize="28dp"
             android:src="@drawable/ic_insert_todoitem_128" />
+
 
     </RelativeLayout>
 

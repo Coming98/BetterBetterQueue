@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">BetterBetterQueue</string>
+    <string name="insertTodoItemToolbarName">引星入梦</string>
+    <string name="configToolbarName">引星入梦</string>
 </resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginTop="10dp"
+    >
+
+    <TextView
+        android:id="@+id/todoitem_info_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/text_in_gray"
+        android:text="2022-10-09 | 12:17 ~ 15:23"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
+
+    <FrameLayout
+        android:id="@+id/todoitem_info_content_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="0dp"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:backgroundTint="@color/text_backgroud_green"
+            android:background="@drawable/message_left">
+
+            <TextView
+                android:id="@+id/todoitem_info_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxWidth="240dp"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:text="哈哈哈这个不错哈哈哈这个不错哈哈哈这个不错哈哈哈这个不错"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+</LinearLayout>

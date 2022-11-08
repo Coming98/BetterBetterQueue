@@ -17,8 +17,8 @@ interface TodoCategoryDao {
     suspend fun deleteTodoCategory(todoCategory: TodoCategory)
 
     // - 更改类别名称：更改某个 category 的 name 属性
-    @Query("update todo_category set category=:category where id=:id")
-    suspend fun updateCategoryById(category: String, id: Long)
+    @Query("update todo_category set name=:name where id=:id")
+    suspend fun updateTodoCategoryNameById(name: String, id: Long)
 
     // - 更改类别数目：更改某个 category 的 count 属性
     @Query("update todo_category set count=count+1 where id=:id")
@@ -35,8 +35,12 @@ interface TodoCategoryDao {
 
     // - 根据类别信息获取 todoCategory:
     // 根据 category 获取 category_id; 更改 item 对应的 category 时, 需要根据 category 找到 category_id, 让后更新 TodoCategoryInfo
-    @Query("select * from todo_category where category=:category")
-    suspend fun getTodoCategoryByCategory(category: String): TodoCategory
+    @Query("select * from todo_category where name=:name")
+    suspend fun getTodoCategoryByCategory(name: String): TodoCategory
+
+    // 删除所有的 todoCategory
+    @Query("delete from todo_category")
+    suspend fun deleteAllTodoCategory()
 
     // - TodoCategoryInfo
     // - 插入类别条目：插入 todoitem 时，插入 todoitem 与其 category 的映射
@@ -47,6 +51,9 @@ interface TodoCategoryDao {
     @Delete
     suspend fun deleteTodoCategoryInfo(todoCategoryInfo: TodoCategoryInfo)
 
+    @Query("delete from todo_category where id=:todoCategoryId")
+    suspend fun deleteTodoCategoryById(todoCategoryId: Long)
+
     @Query("delete from todo_category_info where id=:todoCategoryInfoId")
     suspend fun deleteTodoCategoryInfoById(todoCategoryInfoId: Long)
 
@@ -55,8 +62,8 @@ interface TodoCategoryDao {
     suspend fun updateCategoryInfo(todoCategoryInfo: TodoCategoryInfo)
 
     // - 获取某一类别下的所有条目：根据 category_id 获取所有的 todoitem
-    @Query("select * from todo_category_info where category_id=:categoryId")
-    suspend fun getItemIdsByCategoryId(categoryId: Long): List<TodoCategoryInfo>
+    // @Query("select * from todo_category_info where category_id=:categoryId")
+    // suspend fun getItemIdsByCategoryId(categoryId: Long): List<TodoCategoryInfo>
 
     // - 获取某一条目的类别：根据 item_id 获取 category_id
     @Query("select * from todo_category_info where item_id=:itemId")
@@ -65,5 +72,9 @@ interface TodoCategoryDao {
     // - 获得所有类别对应信息
     @Query("select * from todo_category_info")
     suspend fun getAllTodoCategoryInfo(): List<TodoCategoryInfo>
+
+    // 删除所有的 todoCategoryInfo
+    @Query("delete from todo_category_info")
+    suspend fun deleteAllTodoCategoryInfo()
 
 }
