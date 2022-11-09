@@ -26,7 +26,7 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 
 这是主界面，主要负责根据所选 TodoItem 的类别呈现已创建的 TodoItem 事项
 
-<img src="https://raw.githubusercontent.com/Coming98/pictures/main/202210281046766.png" title="" alt="" data-align="center">
+<img title="" src="https://raw.githubusercontent.com/Coming98/pictures/main/202210281046766.png" alt="" data-align="center" width="106">
 
 - [x] 顶部左侧按钮用于弹出左侧的[滑动菜单](#todocategory-drawer-layout), 提供类别选择
 - [x] 顶部中间的标题支持单击后更改名称
