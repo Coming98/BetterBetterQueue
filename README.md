@@ -51,7 +51,8 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 
 ### TodoCategory Drawer Layout
 
-<img src="https://raw.githubusercontent.com/Coming98/pictures/main/202210281057381.png" title="" alt="" data-align="center">
+<img src="https://raw.githubusercontent.com/Coming98/pictures/main/202210281057381.png" alt="" data-align="center" width="106">
+
 
 - [x] 展示所有的类别信息
   - [x] 第一个类别信息是固定名称 `星海`, 表示所有的 TodoItem 集合, 即每一个创建的 TodoItem 默认属于该类别
@@ -66,7 +67,8 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 - [x] Export Database Data: 导出 JSON 格式的数据库数据 `Android\data\com.example.betterbetterqueue\files\Documents\*.json`
 - [x] Import Database Data: 导入 JSON 格式的数据库数据 - 暂时只支持从微信中选择数据库文件后以本应用打开进行导入
 
-<img title="" src="https://raw.githubusercontent.com/Coming98/pictures/main/202211092027014.jpg" alt="" data-align="center" width="327">
+
+<img src="https://raw.githubusercontent.com/Coming98/pictures/main/202211092027014.jpg" alt="" data-align="center" width="106">
 
 ## InsertTodoItemActivity
 
@@ -74,7 +76,7 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 
 这个界面还没太完善相关功能，主要负责 TodoItem 的新建任务
 
-<img title="" src="https://raw.githubusercontent.com/Coming98/pictures/main/202211092032052.jpg" alt="" data-align="center" width="327">
+<img src="https://raw.githubusercontent.com/Coming98/pictures/main/202211092032052.jpg" alt="" data-align="center" width="106">
 
 - [x] 插入 TodoItem 时支持选择现有类别或新建类别
 
@@ -82,7 +84,7 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 
 - [source code](app/src/main/java/com/example/betterbetterqueue/ui/TodoItemInfo/TodoItemInfoActivity.kt)
 
-<img title="" src="https://raw.githubusercontent.com/Coming98/pictures/main/202211092037844.jpg" alt="" data-align="center" width="327">
+<img title="" src="https://raw.githubusercontent.com/Coming98/pictures/main/202211092037844.jpg" alt="" data-align="center" width="106">
 
 - [x] 标题栏名称支持点击改名
 - [x] 标题栏右侧支持置顶该 TodoItem（置顶的 TodoItem 之间按照置顶时间降序排列）
@@ -102,7 +104,7 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 
 - [source code](app/src/main/java/com/example/betterbetterqueue/ui/TodoItemInfo/TodoItemInfoByDayActivity.kt)
 
-<img src="https://raw.githubusercontent.com/Coming98/pictures/main/202210282040989.png" title="" alt="" data-align="center">
+<img src="https://raw.githubusercontent.com/Coming98/pictures/main/202210282040989.png" alt="" data-align="center" width="106">
 
 - [x] 标题栏右侧按钮支持将时间跨度重置为今日
 - [x] 支持左右滑动切换日期
