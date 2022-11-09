@@ -14,7 +14,7 @@ import java.sql.Timestamp
 import java.time.Instant
 import java.time.LocalDateTime
 import java.util.*
-
+// Done
 class TodoItemAdapter(val todoItemList: List<TodoItem>, val startTodoItemInfo: (todoItemId: Long) -> Unit): RecyclerView.Adapter<TodoItemAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -24,6 +24,9 @@ class TodoItemAdapter(val todoItemList: List<TodoItem>, val startTodoItemInfo: (
         val todoItemIcTop: View = view.findViewById(R.id.view_ic_top)
     }
 
+    /**
+     * 点击后进入 TodoItemInfoActivity
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.todoitem_card, parent, false)
         val holder = ViewHolder(view)
@@ -35,6 +38,9 @@ class TodoItemAdapter(val todoItemList: List<TodoItem>, val startTodoItemInfo: (
         return holder
     }
 
+    /**
+     * 更新 UI
+     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val todoitem = todoItemList[position]
         holder.todoItemName.text = todoitem.name

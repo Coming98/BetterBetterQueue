@@ -12,10 +12,10 @@ import com.example.betterbetterqueue.R
 import com.example.betterbetterqueue.TodoApplication
 import com.example.betterbetterqueue.logic.Entity.TodoCategory
 
-
+// Done
 class TodoCategoryAdapter(val todoCategoryList: List<TodoCategory>, val refreshTodoItemByCategory: (id: Long) -> Unit): RecyclerView.Adapter<TodoCategoryAdapter.ViewHolder>() {
 
-    var currentTodoCategoryId: Long = -1L
+    var currentTodoCategoryId: Long = -1L // 标识当前选中的 TodoCategoryId
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
         val todoCategoryName: TextView = view.findViewById(R.id.todocategory_name)
@@ -23,6 +23,11 @@ class TodoCategoryAdapter(val todoCategoryList: List<TodoCategory>, val refreshT
         val todoCategoryLayout: LinearLayout = view.findViewById(R.id.todocategory_layout)
     }
 
+    /**
+     * 点击后更新当前选中的 TodoCategoryId
+     * 更新 UI
+     * 告知父 Activity 触发数据库请求
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoCategoryAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.todocategory_card, parent, false)
         val holder = ViewHolder(view)
@@ -35,10 +40,14 @@ class TodoCategoryAdapter(val todoCategoryList: List<TodoCategory>, val refreshT
         return holder
     }
 
+    /**
+     * Adapter 重新加载后高亮当前选中的 TodoCategory
+     */
     override fun onBindViewHolder(holder: TodoCategoryAdapter.ViewHolder, position: Int) {
         val todoCategory = todoCategoryList[position]
         holder.todoCategoryName.text = todoCategory.name
         holder.todoCategoryCount.text = todoCategory.count.toString()
+
         if(todoCategory.id == currentTodoCategoryId){
             holder.todoCategoryLayout.setBackgroundColor(TodoApplication.context.getColor(R.color.bg_orange))
             holder.todoCategoryCount.setTextColor(TodoApplication.context.getColor(R.color.white))

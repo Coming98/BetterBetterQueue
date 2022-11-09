@@ -591,7 +591,7 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
      *      更新 UI 到计时界面
      *      隐藏软键盘
      *      如果是插入操作则初始化计时界面: 逻辑上清空缓存
-     *      如果是更新操作则重置 currentTodoItemInfoId 为 -1L (表示插入状态)
+     *      如果是更新操作则重置 currentTodoItemInfoId 为 -1L (表示插入状态)，清空缓存
      */
     private fun observeInsertTodoItemInfoResult() {
         viewModel.insertTodoItemInfoResult.observe(this, Observer { result ->
@@ -606,12 +606,12 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
 
                 if(viewModel.currentTodoItemInfoId == -1L) {
                     initTickerState()
-                    viewModel.dumpTodoItemInfoDesCache("")
                     viewModel.dumpTodoItemIdCache(-1L)
                     itemInfoRunHandler.removeCallbacks(itemInfoRunTicker)
                 } else {
                     viewModel.currentTodoItemInfoId = -1L
                 }
+                viewModel.dumpTodoItemInfoDesCache("")
             }
         })
     }

@@ -6,9 +6,10 @@ import androidx.lifecycle.ViewModel
 import com.example.betterbetterqueue.logic.Entity.TodoCategory
 import com.example.betterbetterqueue.logic.Repository
 
+// Done
 class TodoItemViewModel: ViewModel() {
 
-    val todoCategoryList = ArrayList<TodoCategory>() // 对界面上展示的 TodoCategoryList 进行缓存
+    val todoCategoryList = ArrayList<TodoCategory>() // 界面上展示的 TodoCategoryList
 
     private val getAllTodoCategoryObs = MutableLiveData<Any?>()
 

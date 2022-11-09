@@ -16,9 +16,12 @@ import com.example.betterbetterqueue.loadToolbarFragment
 import com.example.betterbetterqueue.logic.Entity.TodoCategory
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-
+// Done
 class InsertTodoItemActivity : AppCompatActivity(), View.OnClickListener {
 
+    /**
+     * 外部启动接口
+     */
     companion object {
         fun onActionStart(context: Context, activityResultLauncher: ActivityResultLauncher<Intent>) {
             val intent = Intent(context, InsertTodoItemActivity::class.java)
@@ -27,6 +30,9 @@ class InsertTodoItemActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     val viewModel: TodoItemViewModel by lazy { ViewModelProvider(this).get(TodoItemViewModel::class.java) }
+    /**
+     * 界面组件：TodoItemName, TodoItemCategory
+     */
     val insert_todoitem_name: EditText by lazy { findViewById(R.id.insert_todoitem_name) }
     val insertTodoitmeCategory: EditText by lazy { findViewById(R.id.insert_todoitem_category) }
 
@@ -34,15 +40,20 @@ class InsertTodoItemActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_insert_todoitem)
 
-        //////////////////////////// 加载标题栏
+
         loadToolbarFragment(toolbarNmae = getString(R.string.insertTodoItemToolbarName), toolbarLeft = R.drawable.ic_back, toolbarRight = null,
             changeToolbarName = null,
             handleButtonLeft = { finish()},
             handleButtonRight = { }
         )
 
+        val button_insert_todoitem: FloatingActionButton = findViewById(R.id.btn_insert_todoitem)
+        val buttonCheckTodoCategory: Button = findViewById(R.id.btn_check_category)
+        arrayOf(button_insert_todoitem, buttonCheckTodoCategory).forEach { it.setOnClickListener(this) }
 
-        /////////////////////////////// 加载数据库数据并监听
+        /**
+         * 提供类别选择
+         */
         viewModel.getAllTodoCategory()
 
         viewModel.getAllTodoCategoryResult.observe(this, Observer { result ->
@@ -55,46 +66,49 @@ class InsertTodoItemActivity : AppCompatActivity(), View.OnClickListener {
                 result.exceptionOrNull()?.printStackTrace()
             }
         })
-
-
-        /////////////////////////// 设置必要的按钮点击事件
-
-        val button_insert_todoitem: FloatingActionButton = findViewById(R.id.btn_insert_todoitem)
-        val buttonCheckTodoCategory: Button = findViewById(R.id.btn_check_category)
-        arrayOf(button_insert_todoitem, buttonCheckTodoCategory).forEach { it.setOnClickListener(this) }
     }
-
-    private val COUNTRIES = arrayOf(
-        "Belgium", "France", "Italy", "Germany", "Spain"
-    )
 
     override fun onClick(v: View?) {
         when (v?.id) {
+            /**
+             * 浮动按钮: 确认插入 TodoItem
+             *      TodoItemName 与 TodoCategoryName 判空
+             *      TodoCategoryName 是否已存在
+             *          存在则记录 TodoCategoryId
+             *          不存在则置 TodoCategoryId 为 -1L
+             *      返回信息
+             */
             R.id.btn_insert_todoitem -> {
                 val todoItemName: String = insert_todoitem_name.text.trim().toString()
-                val todoItemCategory: String = insertTodoitmeCategory.text.toString()
-                if(todoItemName.isEmpty()) {
-                    Toast.makeText(this, "时光点滴 内容不能为空哦~", Toast.LENGTH_SHORT).show()
+                val todoCategoryName: String = insertTodoitmeCategory.text.trim().toString()
+
+                var emptyExceptionContent: String? = null
+                emptyExceptionContent = if (todoItemName.isEmpty()) "时光点滴 内容不能为空哦~" else null
+                emptyExceptionContent = if (todoCategoryName.isEmpty()) "时光点滴 类别不能为空哦~" else null
+                if(emptyExceptionContent != null) {
+                    Toast.makeText(this, emptyExceptionContent, Toast.LENGTH_SHORT).show()
                     return
                 }
-                // 查询类别信息
-                var todoItemCategoryId: String = "null"
-                val todoCategoryItems = viewModel.todoCategoryList.map { it.name }
-                if(todoCategoryItems.contains(todoItemCategory)) {
-                    todoItemCategoryId = viewModel.todoCategoryList.get(todoCategoryItems.indexOf(todoItemCategory)).id.toString()
+
+                var todoCategoryId: Long = -1L
+                val todoCategoryNames = viewModel.todoCategoryList.map { it.name }
+                if(todoCategoryNames.contains(todoCategoryName)) {
+                    todoCategoryId = viewModel.todoCategoryList.get(todoCategoryNames.indexOf(todoCategoryName)).id
                 }
-                // 返回 TodoItem 对象的相关信息
+
                 val intent = Intent().apply {
                     putExtra("status", "OK")
                     putExtra("todoItemName", todoItemName)
-                    putExtra("todoItemCategory", todoItemCategory)
-                    putExtra("todoItemCategoryId", todoItemCategoryId)
+                    putExtra("todoCategoryName", todoCategoryName)
+                    putExtra("todoCategoryId", todoCategoryId)
                 }
                 setResult(RESULT_OK, intent)
                 finish()
             }
-            // 选择类别
 
+            /**
+             * 类别选择框
+             */
             R.id.btn_check_category -> {
                 val todoCategoryItems = viewModel.todoCategoryList.map { it.name }.toTypedArray()
                 val alertBuilder: AlertDialog.Builder = AlertDialog.Builder(this).apply {

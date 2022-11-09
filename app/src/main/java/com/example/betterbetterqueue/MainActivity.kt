@@ -119,8 +119,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             if(viewModel.todoCategoryId != todoCategoryId) {
                 viewModel.todoCategoryId = todoCategoryId
                 viewModel.dumpTodoCategoryIdCache(todoCategoryId)
-                viewModel.refreshTodoItemByCategory(todoCategoryId) // 高亮选中的 TodoCategory
-                viewModel.getAllTodoCategory()
+                viewModel.refreshTodoItemByCategory(todoCategoryId)
+                viewModel.getAllTodoCategory() // 高亮选中的 TodoCategory
                 if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START)
                 }
@@ -292,17 +292,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 val data: Intent = result.data!!
                 if(data.hasExtra("status") && data.getStringExtra("status") == "OK") {
                     val todoItemName = data.getStringExtra("todoItemName")!!
-                    val todoItemCategory = data.getStringExtra("todoItemCategory")!!
-                    val todoItemCategoryIdStatus: String = data.getStringExtra("todoItemCategoryId")!!
+                    val todoCategoryName = data.getStringExtra("todoCategoryName")!!
+                    val todoCategoryId: Long = data.getLongExtra("todoCategoryId", -1L)
                     val createTime = LocalDateTime.now()
                     val totalTime: Long = 0
 
                     val todoItem = TodoItem(name = todoItemName, createTime = createTime, totalTime = totalTime)
-                    var todoItemCategoryId: Long = -1
-                    if(todoItemCategoryIdStatus != "null") {
-                        todoItemCategoryId = todoItemCategoryIdStatus.toLong()
-                    }
-                    viewModel.insertTodoItem(todoItem, todoItemCategory, todoItemCategoryId)
+                    viewModel.insertTodoItem(todoItem, todoCategoryName, todoCategoryId)
                 }
             }
         }
