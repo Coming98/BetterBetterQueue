@@ -26,7 +26,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+// import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.betterbetterqueue.TodoApplication.Companion.DEFAULT_CATEGORY_NAME
 import com.example.betterbetterqueue.TodoApplication.Companion.SLIDE_THRESHOLD
 import com.example.betterbetterqueue.TodoApplication.Companion.todoGson
@@ -57,11 +57,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     val drawerLayout: DrawerLayout by lazy { findViewById(R.id.drawer_layout) } // todoCategory - Drawer
 
-    val todoItemSwipeRefresh: SwipeRefreshLayout by lazy {
-        val swipeRefresh: SwipeRefreshLayout = findViewById(R.id.todoitem_swipe)
-        swipeRefresh.setColorSchemeResources(R.color.blue)
-        swipeRefresh
-    } // todoItemRefresh - SwipeRefresh
+    // val todoItemSwipeRefresh: SwipeRefreshLayout by lazy {
+    //     val swipeRefresh: SwipeRefreshLayout = findViewById(R.id.todoitem_swipe)
+    //     swipeRefresh.setColorSchemeResources(R.color.blue)
+    //     swipeRefresh
+    // } // todoItemRefresh - SwipeRefresh
 
     lateinit var toolbarFragment: ToolbarFragment // ToolBar
 
@@ -143,9 +143,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         /**
          * 下拉刷新事件
          */
-        todoItemSwipeRefresh.setOnRefreshListener {
-            viewModel.refreshTodoItemByCategory(viewModel.todoCategoryId)
-        }
+        // todoItemSwipeRefresh.setOnRefreshListener {
+        //     viewModel.refreshTodoItemByCategory(viewModel.todoCategoryId)
+        // }
 
 
         /**
@@ -345,9 +345,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
                 toolbarFragment.refreshToolbarName(todoCategoryName, viewModel.todoCategoryId == -1L)
 
-                if(todoItemSwipeRefresh.isRefreshing) {
-                    todoItemSwipeRefresh.isRefreshing = false
-                }
+                // if(todoItemSwipeRefresh.isRefreshing) {
+                //     todoItemSwipeRefresh.isRefreshing = false
+                // }
 
                 if(drawerLayout.isDrawerOpen(GravityCompat.START)) {
                     drawerLayout.closeDrawer(GravityCompat.START)

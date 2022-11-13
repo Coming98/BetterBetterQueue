@@ -30,23 +30,23 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/toolbar_fragment"
                 />
+<!-- 关闭下拉刷新功能 - 依靠逻辑实现, 手动下拉刷新将不再需要 -->
+<!--            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout-->
+<!--                android:id="@+id/todoitem_swipe"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+<!--                >-->
 
-            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/todoitem_swipe"
-                android:layout_width="wrap_content"
+<!--            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>-->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_todoitem"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                >
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_todoitem"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="4dp"
+                android:paddingTop="4dp"
 
-                    />
-            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
+                />
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
