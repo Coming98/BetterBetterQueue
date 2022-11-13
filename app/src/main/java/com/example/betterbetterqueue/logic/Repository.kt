@@ -24,18 +24,29 @@ object Repository {
         Result.success(todoCategoryId)
     }
 
-    fun loadTodoItemIdCache() = fire(Dispatchers.IO) {
-        val todoItemId = LocalStateDao.loadTodoItemIdCache()
-        Result.success(todoItemId)
-    }
+    // fun loadTodoItemIdCache() = fire(Dispatchers.IO) {
+    //     val todoItemId = LocalStateDao.loadTodoItemIdCache()
+    //     Result.success(todoItemId)
+    // }
+    //
+    // fun loadTickerInfosCache() = fire(Dispatchers.IO) {
+    //     val tickerInfosCache = LocalStateDao.loadTickerInfosCache()
+    //     Result.success(tickerInfosCache)
+    // }
+    //
+    // fun loadTodoItemInfoDesCache() = fire(Dispatchers.IO) {
+    //     Result.success(LocalStateDao.loadTodoItemInfoDesCache())
+    // }
 
-    fun loadTickerInfosCache() = fire(Dispatchers.IO) {
-        val tickerInfosCache = LocalStateDao.loadTickerInfosCache()
+    fun loadTickerInfosCacheById(todoItemId: Long) = fire(Dispatchers.IO) {
+        val tickerInfosCache = LocalStateDao.loadTickerInfosCacheById(todoItemId)
         Result.success(tickerInfosCache)
     }
 
-    fun loadTodoItemInfoDesCache() = fire(Dispatchers.IO) {
-        Result.success(LocalStateDao.loadTodoItemInfoDesCache())
+    fun dumpTickerInfosCacheById(todoItemId: Long, tickerInfos: TickerInfos?) {
+        thread {
+            LocalStateDao.dumpTickerInfosCacheById(todoItemId, tickerInfos)
+        }
     }
 
     fun dumpCurrentTodoCategoryId(todoCategoryId: Long) {
@@ -44,23 +55,23 @@ object Repository {
         }
     }
 
-    fun dumpTodoItemIdCache(todoItemId: Long) {
-        thread {
-            LocalStateDao.dumpTodoItemIdCache(todoItemId)
-        }
-    }
-
-    fun dumpTickerInfosCache(tickerInfos: TickerInfos) {
-        thread {
-            LocalStateDao.dumpTickerInfosCache(tickerInfos)
-        }
-    }
-
-    fun dumpTodoItemInfoDesCache(todoItemInfoDes: String) {
-        thread {
-            LocalStateDao.dumpTodoItemInfoDesCache(todoItemInfoDes)
-        }
-    }
+    // fun dumpTodoItemIdCache(todoItemId: Long) {
+    //     thread {
+    //         LocalStateDao.dumpTodoItemIdCache(todoItemId)
+    //     }
+    // }
+    //
+    // fun dumpTickerInfosCache(tickerInfos: TickerInfos) {
+    //     thread {
+    //         LocalStateDao.dumpTickerInfosCache(tickerInfos)
+    //     }
+    // }
+    //
+    // fun dumpTodoItemInfoDesCache(todoItemInfoDes: String) {
+    //     thread {
+    //         LocalStateDao.dumpTodoItemInfoDesCache(todoItemInfoDes)
+    //     }
+    // }
 
     ////////////////////////////// TodoItem
 

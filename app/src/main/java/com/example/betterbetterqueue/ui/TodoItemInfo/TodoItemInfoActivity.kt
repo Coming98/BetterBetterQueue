@@ -104,12 +104,11 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
         viewModel.getTodoItemById(viewModel.todoItemId)
 
         /**
-         * 根据 本地缓存 进行初始化
-         *      加载本地缓存的 TodoItemIdCache
-         *      如果与 TodoItemId 一致, 则加载缓存的 TickerInfos
-         *      否则进行默认的初始化操作
+         * 尝试加载本地缓存进行状态恢复
+         *      如果存在 (tickerInfos), 则根据缓存内容进行状态初始化
+         *      如果不存在 (null), 则进行默认初始化
          */
-        viewModel.loadTodoItemIdCache()
+        viewModel.loadTickerInfosCacheById(viewModel.todoItemId)
 
 
         /**
@@ -139,19 +138,14 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
         observeGetTodoItemByIdResult()
 
         /**
-         * 加载本地缓存的 TodoItemIdCache
+         * 加载本地缓存的 TickerInfos 后的回调处理
          */
-        observeLoadTodoItemIdCacheResult()
+        obserceLoadTickerInfosCacheByIdResult()
 
         /**
          * 加载 TodoItemInfos 后的回调
          */
         observeGetTodoItemInfosByIdResult()
-
-        /**
-         * 加载本地缓存的 TickerInfos
-         */
-        observeLoadTickerInfosCacheResult()
 
         /**
          * 监听软键盘的弹出与隐藏，防止 TodoItemInfos 被折叠
@@ -182,19 +176,6 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
          * 更新置顶状态后的回调
          */
         observeUpdateTodoItemToptimeByIdResult()
-
-        /**
-         * 根据 Ticker 状态的变化缓存信息（已经新建了一个 TodoItemInfo 了才会覆盖）
-         */
-        observeTickerStatusObs()
-
-        viewModel.loadTodoItemInfoDesCacheResult.observe(this, Observer { result ->
-            val todoItemInfoDes = result.getOrNull()
-            if(todoItemInfoDes != null) {
-                viewModel.todoItemInfoDes = todoItemInfoDes
-                showInfoDescriptionEdit(viewModel.todoItemInfoDes)
-            }
-        })
     }
 
     /**
@@ -212,7 +193,7 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
      */
     override fun onStop() {
         super.onStop()
-        if(viewModel.tickerStatus == true) {
+        if(viewModel.tickerInfos.status == true) {
             itemInfoRunHandler.removeCallbacks(itemInfoRunTicker)
         }
     }
@@ -251,26 +232,26 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
              */
             R.id.btn_toggle_time -> {
 
-                if(viewModel.tickerBeginTime == null) {
-                    viewModel.tickerBeginTime = LocalDateTime.now()
+                if(viewModel.tickerInfos.beginTime == null) {
+                    viewModel.tickerInfos.beginTime = LocalDateTime.now()
                 }
 
-                val targetTickerStatus = !viewModel.tickerStatus
+                val targetTickerStatus = !viewModel.tickerInfos.status
                 if(targetTickerStatus == true) {
-                    viewModel.tickerRecentTime = LocalDateTime.now() // 更新本次计时的开始时间
+                    viewModel.tickerInfos.recentTime = LocalDateTime.now() // 更新本次计时的开始时间
                     viewModel.tickerTime -= 1 // 修补时间计数
                     itemInfoRunHandler.post(itemInfoRunTicker) // 开始计时事件
                 } else {
-                    viewModel.tickerBaseTime = viewModel.tickerTime
-                    viewModel.tickerRecentTime = null
+                    viewModel.tickerInfos.recentTime = null
+                    viewModel.tickerInfos.baseTime = viewModel.tickerTime
                     itemInfoRunHandler.removeCallbacks(itemInfoRunTicker)
                 }
-                btnToggleTime.setImageResource(if(viewModel.tickerStatus) R.drawable.ic_start_time_64 else R.drawable.ic_pause_time_64)
-                toggleButton(btnDeleteItemInfo, true, viewModel.tickerStatus)
+                btnToggleTime.setImageResource(if(targetTickerStatus) R.drawable.ic_pause_time_64 else R.drawable.ic_start_time_64)
+                toggleButton(btnDeleteItemInfo, true, !targetTickerStatus)
                 toggleButton(btnStoreItemInfo, true, true)
 
-                viewModel.tickerStatus = targetTickerStatus
-                viewModel.tickerStatusObs.value = targetTickerStatus
+                viewModel.tickerInfos.status = targetTickerStatus
+                viewModel.dumpTickerInfosCacheById(viewModel.todoItemId, viewModel.tickerInfos)
             }
             /**
              * 删除本次计时记录
@@ -280,8 +261,7 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
              */
             R.id.btn_delete_iteminfo -> {
                 initTickerState()
-                viewModel.dumpTodoItemIdCache(-1L)
-                viewModel.dumpTodoItemInfoDesCache("")
+                viewModel.dumpTickerInfosCacheById(viewModel.todoItemId, null)
             }
             /**
              * 弹出描述记录框
@@ -290,7 +270,7 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
              */
             R.id.btn_store_iteminfo -> {
                 viewModel.currentTodoItemInfoId = -1L
-                viewModel.loadTodoItemInfoDesCache()
+                showInfoDescriptionEdit(viewModel.tickerInfos.des)
             }
             /**
              * 插入/更新 TodoItemInfo
@@ -306,7 +286,7 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
                     Toast.makeText(this, "时光需留痕~", Toast.LENGTH_SHORT).show()
                     return
                 }
-                val todoItemInfo = TodoItemInfo(itemId = viewModel.todoItemId, description = description, beginTime = viewModel.tickerBeginTime,
+                val todoItemInfo = TodoItemInfo(itemId = viewModel.todoItemId, description = description, beginTime = viewModel.tickerInfos.beginTime,
                     endTime = LocalDateTime.now(), totalTime = viewModel.tickerTime.toLong())
                 viewModel.insertTodoItemInfo(todoItemInfo, viewModel.todoItemId, viewModel.currentTodoItemInfoId)
             }
@@ -324,8 +304,8 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
      *
      */
     private fun fixTickerTime() {
-        if(viewModel.tickerStatus == true) {
-            val rightSecond = viewModel.tickerBaseTime + LocalDateTime.now().distence(viewModel.tickerRecentTime!!).toInt()
+        if(viewModel.tickerInfos.status == true) {
+            val rightSecond = viewModel.tickerInfos.baseTime + LocalDateTime.now().distence(viewModel.tickerInfos.recentTime!!).toInt()
             if(rightSecond - viewModel.tickerTime >= 2) {
                 viewModel.tickerTime = rightSecond
             }
@@ -362,8 +342,8 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
                             if(viewModel.currentTodoItemInfoId != -1L) {
                                 viewModel.currentTodoItemInfoId = -1L
                             } else {
-                                viewModel.todoItemInfoDes = insertTodoItemInfoDescription.text.toString()
-                                viewModel.dumpTodoItemInfoDesCache(viewModel.todoItemInfoDes)
+                                viewModel.tickerInfos.des = insertTodoItemInfoDescription.text.toString()
+                                viewModel.dumpTickerInfosCacheById(viewModel.todoItemId, viewModel.tickerInfos)
                             }
                         }
                     }
@@ -426,11 +406,12 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
      *      删除和记录按钮初始化为不可见不可交互
      */
     private fun initTickerState() {
-        viewModel.tickerStatus = false // 计时器状态
         viewModel.tickerTime = 0 // 计时器显示时间
-        viewModel.tickerBaseTime = 0 // tickerBaseTime + (LocalDateTime.now().distence(tickerRecentTime)).toSeconds() = tickerTime
-        viewModel.tickerRecentTime = null // 最近开始计时的时间
-        viewModel.tickerBeginTime = null // 计时器开始的时间
+        viewModel.tickerInfos.status = false // 计时器状态
+        viewModel.tickerInfos.baseTime = 0 // tickerBaseTime + (LocalDateTime.now().distence(tickerRecentTime)).toSeconds() = tickerTime
+        viewModel.tickerInfos.recentTime = null // 最近开始计时的时间
+        viewModel.tickerInfos.beginTime = null // 计时器开始的时间
+        viewModel.tickerInfos.des = ""
 
         setItemInfoRunTime(totalRunSeconds = viewModel.tickerTime) // 更新计时器显示
         btnToggleTime.setImageResource(R.drawable.ic_start_time_64 )
@@ -497,59 +478,34 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     /**
-     * 加载本地缓存的 TodoItemIdCache
-     *      如果与 TodoItemId 一致, 则加载缓存的 TickerInfos
-     *      否则进行默认的初始化操作
+     * 加载本地缓存的 TickerInfos 后的回调处理
+     *      如果存在 (tickerInfos), 则根据缓存内容进行状态初始化
+     *      如果不存在 (null), 则进行默认初始化
      */
-    private fun observeLoadTodoItemIdCacheResult() {
-        viewModel.loadTodoItemIdCacheResult.observe(this, Observer { result ->
-            val todoItemIdCache = result.getOrNull()
-            if(todoItemIdCache != null) {
-                if(todoItemIdCache == viewModel.todoItemId) {
-                    viewModel.loadTickerInfosCache()
-                } else {
-                    initTickerState()
-                }
-            }
-        })
-    }
-
-    /**
-     * 加载本地缓存的 TickerInfos
-     *      获取 TickerStatus: False 表示暂停状态, True 表示启动状态
-     *      记录 tickerBeginTime, tickerBaseTime, tickerTime
-     *      根据 tickerTime 跟新计时器 UI:
-     *          如果是暂停状态, 只需更新最近开始时间为 null;
-     *          如果是开始状态则记录最近开始时间, 下一秒会自动更正 tickerTime(因此没有打算在这里修正时间)
-     *      根据 tickerStatus 更新 UI
-     */
-    private fun observeLoadTickerInfosCacheResult() {
-        viewModel.loadTickerInfosCacheResult.observe(this, Observer { result ->
+    private fun obserceLoadTickerInfosCacheByIdResult() {
+        viewModel.loadTickerInfosCacheByIdResult.observe(this, Observer { result ->
             val tickerInfos = result.getOrNull()
-            if (tickerInfos != null) {
+            if(tickerInfos != null) {
                 val status = tickerInfos.status
 
-                viewModel.tickerBeginTime = tickerInfos.beginTime.toLocalDateTime()
-                viewModel.tickerBaseTime = tickerInfos.baseTime
+                viewModel.tickerInfos = tickerInfos
                 viewModel.tickerTime = tickerInfos.baseTime
 
                 if(status == false) {
-                    viewModel.tickerRecentTime = null
                     btnToggleTime.setImageResource(R.drawable.ic_start_time_64 )
                 } else {
                     btnToggleTime.setImageResource(R.drawable.ic_pause_time_64 )
-                    viewModel.tickerRecentTime = tickerInfos.recentTime.toLocalDateTime()
                 }
 
                 toggleButton(btnDeleteItemInfo, true, !status) // 暂停时可点击(false -> clickable)
                 toggleButton(btnStoreItemInfo, true, true)
 
-                viewModel.tickerStatus = status
                 fixTickerTime()
+            } else {
+                initTickerState()
             }
         })
     }
-
 
     /**
      * 加载 TodoItemInfos 后的回调
@@ -606,41 +562,13 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
 
                 if(viewModel.currentTodoItemInfoId == -1L) {
                     initTickerState()
-                    viewModel.dumpTodoItemIdCache(-1L)
                     itemInfoRunHandler.removeCallbacks(itemInfoRunTicker)
+                    viewModel.dumpTickerInfosCacheById(viewModel.todoItemId, null)
                 } else {
                     viewModel.currentTodoItemInfoId = -1L
                 }
-                viewModel.dumpTodoItemInfoDesCache("")
             }
         })
-    }
-
-    /**
-     * 根据 Ticker 状态的变化缓存信息（已经新建了一个 TodoItemInfo 了才会覆盖）
-     *      缓存 todoItemId
-     *      缓存 tickerInfos
-     */
-    private fun observeTickerStatusObs() {
-        viewModel.tickerStatusObs.observe(this) { status ->
-            if(status == null) return@observe // 过滤初始化 ViewModel 导致的事件
-
-            val temp = TickerInfos(
-                viewModel.tickerStatus,
-                viewModel.tickerBaseTime,
-                viewModel.tickerRecentTime?.toLong() ?: -1L,
-                viewModel.tickerBeginTime?.toLong() ?: -1L
-            )
-            viewModel.dumpTodoItemIdCache(viewModel.todoItemId)
-            viewModel.dumpTickerInfosCache(
-                TickerInfos(
-                    viewModel.tickerStatus,
-                    viewModel.tickerBaseTime,
-                    viewModel.tickerRecentTime?.toLong() ?: -1L,
-                    viewModel.tickerBeginTime?.toLong() ?: -1L
-                )
-            )
-        }
     }
 
     /**

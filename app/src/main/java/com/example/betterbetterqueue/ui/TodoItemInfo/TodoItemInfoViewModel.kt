@@ -18,15 +18,16 @@ class TodoItemInfoViewModel: ViewModel() {
     var lastAccessTime = LocalDateTime.now() // TodoItem 最近访问的时间
     var topTime: Long? = null // todoItem 是否置頂
 
-    var tickerStatus: Boolean = false
+    var tickerInfos: TickerInfos = TickerInfos(false, 0, null, null, "")
+    // var tickerStatus: Boolean = false
+    // var tickerBaseTime: Int = 0 // 用于时间校准的基础走时信息
+    // var tickerRecentTime: LocalDateTime? = null // 用于记录最近一次开始计时的时间
+    // var tickerBeginTime: LocalDateTime? = null
+    // var todoItemInfoDes: String = "" // 记录当前 todoItemInfo 的描述信息, 防止被修改其它 info 时篡改
     var tickerTime: Int = 0 // 用于界面显示计时信息
-    var tickerBaseTime: Int = 0 // 用于时间校准的基础走时信息
-    var tickerRecentTime: LocalDateTime? = null // 用于记录最近一次开始计时的时间
-    var tickerBeginTime: LocalDateTime? = null
 
     val todoItemInfoList = ArrayList<TodoItemInfo>()
     var currentTodoItemInfoId: Long = -1L // -1 表示当前正在新增的类别
-    var todoItemInfoDes: String = "" // 记录当前 todoItemInfo 的描述信息, 防止被修改其它 info 时篡改
 
     /**
      * 需要监听的数据信息
@@ -46,43 +47,60 @@ class TodoItemInfoViewModel: ViewModel() {
      */
 
 
-    private val loadTodoItemIdCacheObs = MutableLiveData<Any?>()
-    private val loadTickerInfosCacheObs = MutableLiveData<Any?>()
-    private val loadTodoItemInfoDesCacheObs = MutableLiveData<Any?>()
+    // private val loadTodoItemIdCacheObs = MutableLiveData<Any?>()
+    // private val loadTickerInfosCacheObs = MutableLiveData<Any?>()
+    // private val loadTodoItemInfoDesCacheObs = MutableLiveData<Any?>()
+    //
+    // val loadTodoItemIdCacheResult = Transformations.switchMap(loadTodoItemIdCacheObs) {
+    //     Repository.loadTodoItemIdCache()
+    // }
+    // val loadTickerInfosCacheResult = Transformations.switchMap(loadTickerInfosCacheObs) {
+    //     Repository.loadTickerInfosCache()
+    // }
+    // val loadTodoItemInfoDesCacheResult = Transformations.switchMap(loadTodoItemInfoDesCacheObs) {
+    //     Repository.loadTodoItemInfoDesCache()
+    // }
+    //
+    // fun loadTodoItemIdCache() {
+    //     loadTodoItemIdCacheObs.value = loadTodoItemIdCacheObs.value
+    // }
+    // fun loadTickerInfosCache() {
+    //     loadTickerInfosCacheObs.value = loadTickerInfosCacheObs.value
+    // }
+    //
+    // fun loadTodoItemInfoDesCache() {
+    //     loadTodoItemInfoDesCacheObs.value = loadTodoItemInfoDesCacheObs.value
+    // }
+    //
+    // fun dumpTodoItemIdCache(todoItemId: Long) {
+    //     Repository.dumpTodoItemIdCache(todoItemId)
+    // }
+    //
+    // fun dumpTickerInfosCache(tickerInfos: TickerInfos) {
+    //     Repository.dumpTickerInfosCache(tickerInfos)
+    // }
+    //
+    // fun dumpTodoItemInfoDesCache(todoItemInfoDes: String) {
+    //     // this.todoItemInfoDes = todoItemInfoDes
+    //     this.tickerInfos.des = todoItemInfoDes
+    //     Repository.dumpTodoItemInfoDesCache(todoItemInfoDes)
+    // }
 
-    val loadTodoItemIdCacheResult = Transformations.switchMap(loadTodoItemIdCacheObs) {
-        Repository.loadTodoItemIdCache()
-    }
-    val loadTickerInfosCacheResult = Transformations.switchMap(loadTickerInfosCacheObs) {
-        Repository.loadTickerInfosCache()
-    }
-    val loadTodoItemInfoDesCacheResult = Transformations.switchMap(loadTodoItemInfoDesCacheObs) {
-        Repository.loadTodoItemInfoDesCache()
+    private val loadTickerInfosCacheByIdObs = MutableLiveData<Long>()
+
+    val loadTickerInfosCacheByIdResult = Transformations.switchMap(loadTickerInfosCacheByIdObs) { todoItemId ->
+        Repository.loadTickerInfosCacheById(todoItemId)
     }
 
-    fun loadTodoItemIdCache() {
-        loadTodoItemIdCacheObs.value = loadTodoItemIdCacheObs.value
-    }
-    fun loadTickerInfosCache() {
-        loadTickerInfosCacheObs.value = loadTickerInfosCacheObs.value
+    fun loadTickerInfosCacheById(todoItemId: Long) {
+        loadTickerInfosCacheByIdObs.value = todoItemId
     }
 
-    fun loadTodoItemInfoDesCache() {
-        loadTodoItemInfoDesCacheObs.value = loadTodoItemInfoDesCacheObs.value
+    fun dumpTickerInfosCacheById(todoItemId: Long, tickerInfos: TickerInfos?) {
+        Repository.dumpTickerInfosCacheById(todoItemId, tickerInfos)
     }
 
-    fun dumpTodoItemIdCache(todoItemId: Long) {
-        Repository.dumpTodoItemIdCache(todoItemId)
-    }
 
-    fun dumpTickerInfosCache(tickerInfos: TickerInfos) {
-        Repository.dumpTickerInfosCache(tickerInfos)
-    }
-
-    fun dumpTodoItemInfoDesCache(todoItemInfoDes: String) {
-        this.todoItemInfoDes = todoItemInfoDes
-        Repository.dumpTodoItemInfoDesCache(todoItemInfoDes)
-    }
 
     private val getTodoItemByIdObs = MutableLiveData<Long>()
     private val getTodoItemInfosByIdObs = MutableLiveData<Long>()

@@ -29,7 +29,10 @@ import androidx.recyclerview.widget.RecyclerView
 // import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.betterbetterqueue.TodoApplication.Companion.DEFAULT_CATEGORY_NAME
 import com.example.betterbetterqueue.TodoApplication.Companion.SLIDE_THRESHOLD
+import com.example.betterbetterqueue.TodoApplication.Companion.cacheGson
 import com.example.betterbetterqueue.TodoApplication.Companion.todoGson
+import com.example.betterbetterqueue.logic.Dao.TodoDatabase
+import com.example.betterbetterqueue.logic.Entity.TickerInfos
 import com.example.betterbetterqueue.logic.Entity.TodoCategory
 import com.example.betterbetterqueue.logic.Entity.TodoItem
 import com.example.betterbetterqueue.ui.Config.DBInJson

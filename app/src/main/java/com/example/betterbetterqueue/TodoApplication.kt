@@ -50,6 +50,8 @@ class TodoApplication: Application() {
                 return json!!.asJsonPrimitive.asString.toLong().toLocalDateTime()
             }
         }).serializeNulls().create()
+        // 缓存数据使用的 json 解析器
+        val cacheGson = GsonBuilder().serializeNulls().setLongSerializationPolicy(LongSerializationPolicy.STRING).create()
     }
 
     override fun onCreate() {

@@ -99,6 +99,7 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 
 - [x] 底部是该 TodoItem 的计时工作台，基本功能有开始计时，暂停计时，清空当前计时
   - [x] 右侧按钮支持计时时录入相关工作内容的描述或者预期计划的描述（支持本地缓存不丢失）
+  - [x] 支持多任务状态缓存（多任务同时计时）
 
 ## TodoItemInfoByDayActivity
 
