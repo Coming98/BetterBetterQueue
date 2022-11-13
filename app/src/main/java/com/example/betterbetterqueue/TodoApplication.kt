@@ -26,7 +26,7 @@ class TodoApplication: Application() {
         lateinit var context: Context // 全局 Context 对象
         lateinit var inputMethodManager: InputMethodManager // 全局 IMM 对象
         val DEFAULT_CATEGORY_NAME: String = "星海" // 默认类别名称
-        val SLIDE_THRESHOLD: Float = 250F // 左右滑动的响应阈值
+        val SLIDE_THRESHOLD: Float = 400F // 左右滑动的响应阈值
         val DAY_IN_MILSECOND: Long = 3600 * 1000 * 24 // 一天内的毫秒数
         val WORKDAY_IN_SECOND: Int = (24 - 12) * 3600 // 一天内工作时间（单位秒）
         // 初始化全局的 json 解析器
