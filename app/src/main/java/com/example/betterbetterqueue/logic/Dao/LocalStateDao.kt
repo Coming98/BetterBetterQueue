@@ -1,11 +1,15 @@
 package com.example.betterbetterqueue.logic.Dao
 
 import android.content.Context
+import android.util.Log
 import com.example.betterbetterqueue.TodoApplication
 import com.example.betterbetterqueue.TodoApplication.Companion.cacheGson
 import com.example.betterbetterqueue.TodoApplication.Companion.todoGson
+import com.example.betterbetterqueue.dateFormatter
 import com.example.betterbetterqueue.logic.Entity.TickerInfos
+import com.example.betterbetterqueue.logic.Entity.TodoItemStatus
 import com.example.betterbetterqueue.open
+import java.time.LocalDateTime
 
 object LocalStateDao {
 
@@ -15,6 +19,17 @@ object LocalStateDao {
     fun loadCurrentTodoCategoryId(): Long {
         val todoCategoryId = sharedPreferences().getLong("todoCategoryId", -1L)
         return todoCategoryId
+    }
+
+    fun loadTodoItemStatus(): TodoItemStatus {
+        val todoItemRunningIds: List<Long> = sharedPreferences().all.keys.filter { it.contains("-tickerInfo") }.map { it.split('-').get(0).toLong() }
+        val todoItemVisitedIdsStr: String? = sharedPreferences().getString(LocalDateTime.now().dateFormatter(), "")
+        var todoItemVisitedIds: List<Long> = listOf()
+        if(todoItemVisitedIdsStr != null && !todoItemVisitedIdsStr.isEmpty()) {
+            todoItemVisitedIds = todoItemVisitedIdsStr.split("-").map { it.toLong() }
+        }
+        val todoItemStatus = TodoItemStatus(running = todoItemRunningIds, visited = todoItemVisitedIds)
+        return todoItemStatus
     }
 
     // fun loadTodoItemIdCache(): Long {
@@ -36,6 +51,7 @@ object LocalStateDao {
     // }
 
     fun loadTickerInfosCacheById(todoItemId: Long): TickerInfos? {
+        Log.d("TEMP", "Loading ${todoItemId} ...")
         val jsonData = sharedPreferences().getString("${todoItemId}-tickerInfo", null)
         if(jsonData != null) {
             return todoGson.fromJson(jsonData, TickerInfos::class.java)
@@ -55,6 +71,25 @@ object LocalStateDao {
                 putString("${todoItemId}-tickerInfo", jsonData)
             }
         }
+    }
+
+    fun dumpTodoItemStatusCacheOfVisited(todoItemId: Long) {
+        val todoItemVisitedIdsStr: String? = sharedPreferences().getString(LocalDateTime.now().dateFormatter(), "")
+
+        var todoItemVisitedIds: List<String> = listOf()
+        if(todoItemVisitedIdsStr != null && !todoItemVisitedIdsStr.isEmpty()) {
+            todoItemVisitedIds = todoItemVisitedIdsStr.split("-")
+        }
+
+        val todoItemIdStr = todoItemId.toString()
+        if(!todoItemVisitedIds.contains(todoItemIdStr)) {
+            todoItemVisitedIds = todoItemVisitedIds.plus(todoItemIdStr)
+            sharedPreferences().open {
+                putString(LocalDateTime.now().dateFormatter(), todoItemVisitedIds.joinToString("-"))
+            }
+        }
+
+        Log.d("TEMP", todoItemVisitedIds.joinToString("-"))
     }
 
     fun dumpCurrentTodoCategoryId(todoCategoryId: Long) {

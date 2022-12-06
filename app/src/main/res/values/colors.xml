@@ -14,4 +14,6 @@
     <color name="blue">#03A9F4</color>
     <color name="orange">#FF9800</color>
     <color name="bg_orange">#C3FF9800</color>
+    <color name="todo_running">#E4F6D4</color>
+    <color name="todo_visited">#D6CFE2</color>
 </resources>

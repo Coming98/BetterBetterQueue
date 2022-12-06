@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.example.betterbetterqueue.logic.Entity.TodoCategory
 import com.example.betterbetterqueue.logic.Entity.TodoCategoryInfo
 import com.example.betterbetterqueue.logic.Entity.TodoItem
+import com.example.betterbetterqueue.logic.Entity.TodoItemStatus
 import com.example.betterbetterqueue.logic.Repository
 import com.example.betterbetterqueue.ui.Config.DBInJson
 // Done
@@ -23,15 +24,26 @@ class MainViewModel: ViewModel() {
 
     /**
      * Local state cache
-     * dumpTodoCategoryIdCache: 开启一个线程保存当前类别即可, 不需要回调
-     * ---
      * loadTodoCategoryIdCache: 成功加载用户的缓存数据后需要回调处理
+     * loadTodoItemIdsCache: 加载本地缓存的 TodoItemId 列表用于判断哪个任务正在进行
+     * ---
+     * dumpTodoCategoryIdCache: 开启一个线程保存当前类别即可, 不需要回调
      */
+    var todoItemStatus: TodoItemStatus? = null
 
     private val loadTodoCategoryIdCacheObs = MutableLiveData<Any?>()
+    private val loadTodoItemStatusCacheObs = MutableLiveData<Any?>()
 
     val loadTodoCategoryIdCacheResult = Transformations.switchMap(loadTodoCategoryIdCacheObs) {
         Repository.loadCurrentTodoCategoryId()
+    }
+
+    val loadTodoItemStatusCacheResult = Transformations.switchMap(loadTodoItemStatusCacheObs)  {
+        Repository.loadTodoItemStatus()
+    }
+
+    fun loadTodoItemStatusCache() {
+        loadTodoItemStatusCacheObs.value = loadTodoItemStatusCacheObs.value
     }
 
     fun loadTodoCategoryIdCache() {

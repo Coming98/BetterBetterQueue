@@ -97,13 +97,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
          */
         loadHeaderBar()
 
-
         /**
          * 加载本地缓存数据
          * 本地缓存数据加载完毕后，根据类别：加载 category 列表 与 todoItem 列表
          */
         viewModel.loadTodoCategoryIdCache()
-
 
         /**
          * 加载 Recycler 数据
@@ -118,6 +116,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         recycler_todoitem.adapter = adapter_todoitem
 
         val layoutManager_todocategory = LinearLayoutManager(this)
+        /**
+         * 点击类别刷新 TodoItems
+         */
         adapter_todoCategory = TodoCategoryAdapter(viewModel.todoCategoryList) { todoCategoryId ->
             if(viewModel.todoCategoryId != todoCategoryId) {
                 viewModel.todoCategoryId = todoCategoryId
@@ -131,6 +132,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         }
         recycler_todocategory.layoutManager = layoutManager_todocategory
         recycler_todocategory.adapter = adapter_todoCategory
+
+
 
 
         /**
@@ -154,6 +157,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         /**
          * 数据变化的回调处理
          */
+
+        /** 加载缓存后的回调处理 */
+        observeloadTodoItemStatusCacheResult()
 
         /**
          * 插入 todoitem 后的回调
@@ -401,13 +407,35 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         })
     }
 
+
+    // 默认类别值为 -1
     private fun observeLoadTodoCategoryIdCacheResult() {
         viewModel.loadTodoCategoryIdCacheResult.observe(this, Observer { result ->
             val todoCategoryId = result.getOrNull()
             if(todoCategoryId != null) {
                 viewModel.todoCategoryId = todoCategoryId
-                viewModel.refreshTodoItemByCategory(todoCategoryId)
                 viewModel.getAllTodoCategory()
+
+                /**
+                 * 加载本地正在进行的任务列表后再进行初始化
+                 *      根据各类任务列表赋予不同的颜色
+                 */
+                Log.d("TEMP", "STEP 1 Trigger")
+                viewModel.loadTodoItemStatusCache()
+            }
+        })
+    }
+
+    private fun observeloadTodoItemStatusCacheResult() {
+        viewModel.loadTodoItemStatusCacheResult.observe(this, Observer { result ->
+            val todoItemStatus = result.getOrNull()
+            if (todoItemStatus != null) {
+                Log.d("TEMP", todoItemStatus.toString())
+                viewModel.todoItemStatus = todoItemStatus
+                adapter_todoitem.todoItemStatus = todoItemStatus
+                viewModel.refreshTodoItemByCategory(viewModel.todoCategoryId)
+            } else {
+                Log.d("TEMP", "STEP 2 Trigger")
             }
         })
     }
@@ -515,7 +543,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      */
     override fun onResume() {
         super.onResume()
-        viewModel.refreshTodoItemByCategory(viewModel.todoCategoryId)
+        // viewModel.refreshTodoItemByCategory(viewModel.todoCategoryId)
+        viewModel.loadTodoItemStatusCache()
     }
 
     override fun onClick(v: View?) {

@@ -24,6 +24,11 @@ object Repository {
         Result.success(todoCategoryId)
     }
 
+    fun loadTodoItemStatus() = fire(Dispatchers.IO) {
+        val todoItemStatus = LocalStateDao.loadTodoItemStatus()
+        Result.success(todoItemStatus)
+    }
+
     // fun loadTodoItemIdCache() = fire(Dispatchers.IO) {
     //     val todoItemId = LocalStateDao.loadTodoItemIdCache()
     //     Result.success(todoItemId)
@@ -49,11 +54,19 @@ object Repository {
         }
     }
 
+    fun dumpTodoItemStatusCacheOfVisited(todoItemId: Long) {
+        thread {
+            LocalStateDao.dumpTodoItemStatusCacheOfVisited(todoItemId)
+        }
+    }
+
+
     fun dumpCurrentTodoCategoryId(todoCategoryId: Long) {
         thread {
             LocalStateDao.dumpCurrentTodoCategoryId(todoCategoryId)
         }
     }
+
 
     // fun dumpTodoItemIdCache(todoItemId: Long) {
     //     thread {

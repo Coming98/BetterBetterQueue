@@ -100,6 +100,10 @@ class TodoItemInfoViewModel: ViewModel() {
         Repository.dumpTickerInfosCacheById(todoItemId, tickerInfos)
     }
 
+    fun dumpTodoItemStatusCacheOfVisited(todoItemId: Long) {
+        Repository.dumpTodoItemStatusCacheOfVisited(todoItemId)
+    }
+
 
 
     private val getTodoItemByIdObs = MutableLiveData<Long>()

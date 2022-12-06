@@ -252,6 +252,7 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
 
                 viewModel.tickerInfos.status = targetTickerStatus
                 viewModel.dumpTickerInfosCacheById(viewModel.todoItemId, viewModel.tickerInfos)
+                viewModel.updateTodoItemToptimeById(LocalDateTime.now().toLong() / 1000, viewModel.todoItemId)
             }
             /**
              * 删除本次计时记录
@@ -567,6 +568,8 @@ class TodoItemInfoActivity : AppCompatActivity(), View.OnClickListener {
                 } else {
                     viewModel.currentTodoItemInfoId = -1L
                 }
+
+                viewModel.dumpTodoItemStatusCacheOfVisited(viewModel.todoItemId)
             }
         })
     }

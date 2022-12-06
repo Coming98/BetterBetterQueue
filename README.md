@@ -44,6 +44,9 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 - [x] 内容区域支持下拉刷新
 - [x] 内容区域支持右滑弹出[类别选择界面](#todocategory-drawer-layout)
 - [x] 内容区域支持左滑进入[星迹](#todoiteminfobydayactivity)
+- [x] 内容区域正在进行的 TodoItem 会赋予浅绿色背景标识
+- [x] 内容区域今天完成过至少一次的 TodoItem 会赋予浅紫色背景标识
+- [x] 内容区域今天访问并点击过开始按钮的 TodoItem 将会被默认置顶并更新置顶时间
 
 ---
 
