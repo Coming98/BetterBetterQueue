@@ -24,51 +24,50 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 
 - [source code](app/src/main/java/com/example/betterbetterqueue/MainActivity.kt)
 
-这是主界面，主要负责根据所选 TodoItem 的类别呈现已创建的 TodoItem 事项
+This is the main interface, primarily responsible for displaying the created TodoItems based on the category of the selected TodoItem.
 
 <img title="" src="https://raw.githubusercontent.com/Coming98/pictures/main/202210281046766.png" alt="" data-align="center" width="106">
 
-- [x] 顶部左侧按钮用于弹出左侧的[滑动菜单](#todocategory-drawer-layout), 提供类别选择
-- [x] 顶部中间的标题支持单击后更改名称
+- [x] The button on the top left is used to open the [sliding menu](#todocategory-drawer-layout) on the left, allowing users to select a category.
+- [x] The title in the top center supports renaming by clicking on it.
 
 ![](https://raw.githubusercontent.com/Coming98/pictures/main/202211092040783.png)
 
-- [x] 顶部右侧按钮用于弹出[菜单](#config-menu)提供以下功能选择:
-  - [x] [星迹 - TodoItemInfoByDayActivity](#todoiteminfobydayactivity): 以天为单位查看今天所进行的 Todo 信息
-  - [x] Export Database Data: 导出 JSON 格式的数据库数据 - TODO, 显示导出的位置
-  - [x] Import Database Data: 导入 JSON 格式的数据库数据 - 暂时只支持从微信中选择数据库文件后以本应用打开进行导入
+- [x] The button on the top right is used to open the [menu]((#config-menu), providing the following options:
+  - [x] [Star Trail - TodoItemInfoByDayActivity](#todoiteminfobydayactivity): View the details of today's Todo items on a daily basis.
+  - [x] Export Database Data: Export the database data in JSON format and display the export location.
+  - [x] Import Database Data: Import database data in JSON format – currently only supports selecting a database file from WeChat and opening it with this application for import.
+---
+
+- [x] Display the added TodoItems based on the currently selected category. Each TodoItem shows the following information: name, creation time, and invested time.
+- [x] The content area supports pull-to-refresh functionality.
+- [x] The content area supports a right swipe to open the [category selection interface](#todocategory-drawer-layout).
+- [x] The content area supports a left swipe to navigate to [Star Trail](#todoiteminfobydayactivity).
+- [x] TodoItems in progress within the content area are highlighted with a light green background.
+- [x] TodoItems in the content area that have been completed at least once today are highlighted with a light purple background.
+- [x] TodoItems in the content area that have been accessed and had their start button clicked today will be automatically pinned to the top, with their pin time updated.
 
 ---
 
-- [x] 根据当前选中的类别展示已添加的 TodoItem，每个 TodoItem 显示信息为: 名称, 创建时间, 投入时间
-- [x] 内容区域支持下拉刷新
-- [x] 内容区域支持右滑弹出[类别选择界面](#todocategory-drawer-layout)
-- [x] 内容区域支持左滑进入[星迹](#todoiteminfobydayactivity)
-- [x] 内容区域正在进行的 TodoItem 会赋予浅绿色背景标识
-- [x] 内容区域今天完成过至少一次的 TodoItem 会赋予浅紫色背景标识
-- [x] 内容区域今天访问并点击过开始按钮的 TodoItem 将会被默认置顶并更新置顶时间
-
----
-
-- [x] 底部的悬浮按钮用于[创建新的 TodoItem](#inserttodoitemactivity)
+- [x] The floating button at the bottom is used to [create a new TodoItem](#inserttodoitemactivity).
 
 ### TodoCategory Drawer Layout
 
 <img src="https://raw.githubusercontent.com/Coming98/pictures/main/202210281057381.png" alt="" data-align="center" width="106">
 
 
-- [x] 展示所有的类别信息
-  - [x] 第一个类别信息是固定名称 `星海`, 表示所有的 TodoItem 集合, 即每一个创建的 TodoItem 默认属于该类别
-  - [x] 后续的类别为用户手动创建的类别集合
-- [x] 单击目标类别按钮即可切换类别
+- [x] Display all category information.
+  - [x] The first category is fixed with the name `Star Ocean`, representing the collection of all TodoItems. Every TodoItem created is assigned to this category by default.
+  - [x] Subsequent categories are user-created collections.
+- [x] Clicking on the target category button allows you to switch categories.
 
 ### Config Menu
 
 <img src="https://raw.githubusercontent.com/Coming98/pictures/main/202210281101279.png" title="" alt="" data-align="center">
 
-- [x] [星迹](#todoiteminfobydayactivity): 以天为单位查看今天所进行的 Todo 信息
-- [x] Export Database Data: 导出 JSON 格式的数据库数据 `Android\data\com.example.betterbetterqueue\files\Documents\*.json`
-- [x] Import Database Data: 导入 JSON 格式的数据库数据 - 暂时只支持从微信中选择数据库文件后以本应用打开进行导入
+- [x] [Star Trail](#todoiteminfobydayactivity): View today's Todo details on a daily basis.
+- [x] Export Database Data: Export database data in JSON format. `Android\data\com.example.betterbetterqueue\files\Documents\*.json`
+- [x] Import Database Data: Import database data in JSON format – currently only supports selecting a database file from WeChat and opening it with this application for import.
 
 
 <img src="https://raw.githubusercontent.com/Coming98/pictures/main/202211092027014.jpg" alt="" data-align="center" width="106">
@@ -77,11 +76,11 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 
 - [source code](app/src/main/java/com/example/betterbetterqueue/ui/TodoItem/InsertTodoItemActivity.kt)
 
-这个界面还没太完善相关功能，主要负责 TodoItem 的新建任务
+- [X] Primarily responsible for creating new TodoItem tasks.
 
 <img src="https://raw.githubusercontent.com/Coming98/pictures/main/202211092032052.jpg" alt="" data-align="center" width="106">
 
-- [x] 插入 TodoItem 时支持选择现有类别或新建类别
+- [x] When inserting a TodoItem, users can choose an existing category or create a new one.
 
 ## TodoItemInfoActivity
 
@@ -89,20 +88,20 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 
 <img title="" src="https://raw.githubusercontent.com/Coming98/pictures/main/202211092037844.jpg" alt="" data-align="center" width="106">
 
-- [x] 标题栏名称支持点击改名
-- [x] 标题栏右侧支持置顶该 TodoItem（置顶的 TodoItem 之间按照置顶时间降序排列）
+- [x] The title bar name supports renaming by clicking on it.
+- [x] The right side of the title bar supports pinning the TodoItem (pinned TodoItems are sorted in descending order based on their pin time).
 
 ---
 
-- [x] 中间展示的之前阶段性进展的描述内容，支持长摁编辑修改描述内容，不影响当前任务计时
+- [x] The description content of previous progress displayed in the middle supports long-press editing to modify the description without affecting the current task timer.
 
 ![](https://raw.githubusercontent.com/Coming98/pictures/main/202211092044368.png)
 
 ---
 
-- [x] 底部是该 TodoItem 的计时工作台，基本功能有开始计时，暂停计时，清空当前计时
-  - [x] 右侧按钮支持计时时录入相关工作内容的描述或者预期计划的描述（支持本地缓存不丢失）
-  - [x] 支持多任务状态缓存（多任务同时计时）
+- [x] At the bottom is the timer workspace for the TodoItem, with basic functions including starting the timer, pausing the timer, and resetting the current timer.
+  - [x] The right-side button allows for inputting descriptions of work done during the timer or planned tasks (with support for local caching to prevent data loss).
+  - [x] Supports multi-task state caching (allowing simultaneous timing for multiple tasks).
 
 ## TodoItemInfoByDayActivity
 
@@ -110,19 +109,19 @@ BBQ, BetterBetterQueue. An open-source cultivation software for managing daily a
 
 <img src="https://raw.githubusercontent.com/Coming98/pictures/main/202210282040989.png" alt="" data-align="center" width="106">
 
-- [x] 标题栏右侧按钮支持将时间跨度重置为今日
-- [x] 支持左右滑动切换日期
-- [x] 支持左滑时日期上界检测
+- [x] Supports multi-task state caching (simultaneous timing for multiple tasks).
+- [x] The right-side button in the title bar supports resetting the time span to today.
+- [x] Supports detecting the upper date limit when swiping left.
 
 ## logic
 
-存放业务逻辑相关的代码
+Stores business logic-related code:
 
-- Entity: 数据模型
-- dao: 数据访问接口
-- model: 网络对象模型
-- network: 网络数据访问接口
-- Repository: UI 与 Logic 的中间层，总控数据访问接口
+Entity: Data models
+DAO: Data Access Interfaces
+Model: Network object models
+Network: Network data access interfaces
+Repository: The intermediary layer between UI and logic, managing overall data access interfaces
 
 # Additional Documentation
 
